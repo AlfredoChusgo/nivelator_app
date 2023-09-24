@@ -28,7 +28,7 @@ class EditJugadorEvent extends JugadoresEvent {
 }
 
 class EliminarJugadorEvent extends JugadoresEvent {   
-  int id;
+  String id;
   EliminarJugadorEvent({required this.id});
 
   @override

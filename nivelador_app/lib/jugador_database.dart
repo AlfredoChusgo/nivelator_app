@@ -2,16 +2,17 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'main2.dart';
+import 'models/models.dart';
 
 class JugadorDatabase {
   //static final JugadorDatabase _instance = JugadorDatabase._();
 
   //factory JugadorDatabase() => _instance;
 
-  // static Database _database ;
+  // static Database database ;
 
   // JugadorDatabase._(){
-  //   _database = database();
+  //   database = database();
   // };
 
   static Future<Database> get database async {
@@ -25,16 +26,25 @@ class JugadorDatabase {
       path,
       version: 1,
       onCreate: (db, version) {
-        return db.execute(
+        db.execute(
           '''
           CREATE TABLE jugadores(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             nombre TEXT,
             ataque INTEGER,
             defensa INTEGER
           )
           ''',
         );
+
+         db.execute('''
+          CREATE TABLE lista_equipo_balanceado (
+            id TEXT PRIMARY KEY,
+            nombre TEXT,
+            grupos TEXT
+          )
+        ''');       
+
       },
     );
   }
@@ -58,8 +68,38 @@ class JugadorDatabase {
         where: 'id = ?', whereArgs: [jugador.id]);
   }
 
-  static Future<int> deleteJugador(int id) async {
+  static Future<int> deleteJugador(String id) async {
     final db = await database;
     return await db.delete('jugadores', where: 'id = ?', whereArgs: [id]);
   }
+////////////////
+
+ Future<void> insertListaEquipoBalanceado(ListaEquipoBalanceado lista) async {
+    await (await database).insert('lista_equipo_balanceado', lista.toMap());
+  }
+
+Future<List<ListaEquipoBalanceado>> getAllListaEquipoBalanceado() async {
+    final List<Map<String, dynamic>> maps = await (await database).query('lista_equipo_balanceado');
+    return List.generate(maps.length, (i) {
+      return ListaEquipoBalanceado.fromMap(maps[i]);
+    });
+  }
+
+  Future<void> updateListaEquipoBalanceado(ListaEquipoBalanceado lista) async {
+    await (await database).update(
+      'lista_equipo_balanceado',
+      lista.toMap(),
+      where: 'id = ?',
+      whereArgs: [lista.id],
+    );
+  }
+
+  Future<void> deleteListaEquipoBalanceado(String id) async {
+    await (await database).delete(
+      'lista_equipo_balanceado',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+  ///
 }

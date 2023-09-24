@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 
 import '../../jugador_database.dart';
 import '../../main2.dart';
+import '../../models/models.dart';
 
 part 'jugador_event.dart';
 part 'jugador_state.dart';
@@ -26,10 +27,12 @@ class JugadoresBloc extends Bloc<JugadoresEvent, JugadoresState> {
     emit(JugadoresLoadedState(jugadores: jugadores));
   }
 
-  FutureOr<void> _onEliminarJugadorEvent(EliminarJugadorEvent event, Emitter<JugadoresState> emit) {
+  FutureOr<void> _onEliminarJugadorEvent(EliminarJugadorEvent event, Emitter<JugadoresState> emit) async {
+    await JugadorDatabase.deleteJugador(event.id);
   }
 
-  FutureOr<void> _onEditJugadorEvent(EditJugadorEvent event, Emitter<JugadoresState> emit) {
+  FutureOr<void> _onEditJugadorEvent(EditJugadorEvent event, Emitter<JugadoresState> emit) async {
+    await JugadorDatabase.updateJugador(event.jugador);
   }
 
   FutureOr<void> _onCrearJugadorEvent(CrearJugadorEvent event, Emitter<JugadoresState> emit) async {

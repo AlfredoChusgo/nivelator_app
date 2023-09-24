@@ -1,31 +1,8 @@
 import 'dart:math';
 
-class Jugador {
-  int id;
-  String nombre;
-  int ataque;
-  int defensa;
+import 'models/models.dart';
 
-  Jugador({required this.id, required this.nombre, required this.ataque, required this.defensa});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nombre': nombre,
-      'ataque': ataque,
-      'defensa': defensa,
-    };
-  }
-
-  factory Jugador.fromMap(Map<String, dynamic> map) {
-    return Jugador(
-      id: map['id'],
-      nombre: map['nombre'],
-      ataque: map['ataque'],
-      defensa: map['defensa'],
-    );
-  }
-}
 
 class DivisorDeJugadores {
   List<Jugador> jugadores;
@@ -51,7 +28,7 @@ class DivisorDeJugadores {
 
 void main() {
   List<Jugador> jugadores = [
-    Jugador(id: 1,nombre: "sdfasdf",ataque: 50,defensa: 20),
+    Jugador(id: "as",nombre: "sdfasdf",ataque: 50,defensa: 20),
     // Jugador(2, "Jugador2", 70, 65),
     // Jugador(3, "Jugador3", 85, 55),
     // Jugador(4, "Jugador4", 10, 20),  // Jugador con valores extremos
