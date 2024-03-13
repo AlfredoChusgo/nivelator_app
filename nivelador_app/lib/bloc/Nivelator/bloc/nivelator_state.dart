@@ -6,6 +6,9 @@ sealed class NivelatorState extends Equatable{
   List<Object?> get props => [];
 }
 
+class NivelatorInitialState extends NivelatorState {
+
+}
 
 class NivelatorLoadingState extends NivelatorState {
 
@@ -13,8 +16,9 @@ class NivelatorLoadingState extends NivelatorState {
 
 class NivelatorLoadedState extends NivelatorState {
   List<Team> results;
-  NivelatorLoadedState({required this.results});
+  NivelateEvent nivelateEvent;
+  NivelatorLoadedState({required this.results , required this.nivelateEvent});
 
   @override
-  List<Object?> get props => [results];
+  List<Object?> get props => [results,nivelateEvent];
 }

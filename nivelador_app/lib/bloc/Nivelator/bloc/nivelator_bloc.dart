@@ -13,7 +13,7 @@ part 'nivelator_event.dart';
 part 'nivelator_state.dart';
 
 class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
-  NivelatorBloc() : super(NivelatorLoadingState()) {
+  NivelatorBloc() : super(NivelatorInitialState()) {
     on<NivelateEvent>(_onNivelateEvent);
   }
 
@@ -25,8 +25,8 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
     int numTeams = 4;
-    List<Team> equipos = TeamGenerator().monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
-    
-    emit(NivelatorLoadedState(results: equipos));
+    emit(NivelatorLoadingState());
+    List<Team> equipos = await TeamGenerator().monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
+    emit(NivelatorLoadedState(results: equipos,nivelateEvent: event));
   }
 }

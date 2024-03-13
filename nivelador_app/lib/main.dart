@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/data/in_memory_jugador_repository.dart';
 import 'package:nivelador_app/data/jugador_repository_interface.dart';
-import 'package:nivelador_app/ui/pages/nivelator_page.dart';
+import 'package:nivelador_app/ui/pages/nivelator_page_results.dart';
 import 'package:nivelador_app/ui/pages/configuration_page.dart';
 import 'package:nivelador_app/ui/pages/production_app.dart';
 import 'bloc/Nivelator/bloc/nivelator_bloc.dart';

@@ -4,7 +4,8 @@ import 'package:nivelador_app/bloc/bloc/jugador_bloc.dart';
 
 import '../../bloc/Nivelator/bloc/nivelator_bloc.dart';
 import '../../models/models.dart';
-import 'nivelator_page.dart';
+import 'nivelator_page_home.dart';
+import 'nivelator_page_results.dart';
 
 class ConfigurationPage extends StatelessWidget {
   @override
@@ -68,20 +69,22 @@ class SelectJugadoresPage extends StatefulWidget {
   void nivelarEquipos(BuildContext context, List<Jugador> jugadores) {
     final int cantidadEquipos = int.tryParse(equiposController.text) ?? 0;
     final int cantidadJugadores = int.tryParse(jugadoresController.text) ?? 0;
+
     context.read<NivelatorBloc>().add(NivelateEvent(
         cantidadEquipos: cantidadEquipos,
         jugadoresPorEquipo: cantidadJugadores,
         jugadores: jugadores));
+
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NivelatorPage(),
+        builder: (context) => NivelatorPageHome(),
       ),
     );
   }
 }
 
 class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
-   List<Jugador> selectedItems = [];
+  List<Jugador> selectedItems = [];
 
   void toggleSelection(Jugador item) {
     setState(() {
@@ -112,9 +115,9 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
           JugadoresLoadingState() =>
             const Center(child: CircularProgressIndicator()),
           JugadoresLoadedState() => Column(
-            children: [
-              ListTile(
-                tileColor: Theme.of(context).colorScheme.outlineVariant,
+              children: [
+                ListTile(
+                  tileColor: Theme.of(context).colorScheme.outlineVariant,
                   title: Text("Seleccionar Todo"),
                   leading: Checkbox(
                     value: false,
@@ -126,34 +129,34 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
                     toggleAll(state.jugadores);
                   },
                 ),
-              Expanded(
-                child: ListView.builder(
-                itemCount: state.jugadores.length,
-                itemBuilder: (context, index) {
-                  //final jugador = state.jugadores[index];
-                  //final item = items[index];
-                  
-                  final jugador = state.jugadores[index];
-                  final isSelected = selectedItems.contains(jugador);
-                
-                  return ListTile(
-                    title: Text(jugador.nombre),
-                    subtitle: Text(
-                        'Ataque: ${jugador.ataque}, Defensa: ${jugador.defensa}'),
-                    leading: Checkbox(
-                      value: isSelected,
-                      onChanged: (_) {
-                        toggleSelection(jugador);
-                      },
-                    ),
-                    onTap: () {
-                      toggleSelection(jugador);
-                    },
-                  );
-                }),
-              )
-            ],
-          )
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: state.jugadores.length,
+                      itemBuilder: (context, index) {
+                        //final jugador = state.jugadores[index];
+                        //final item = items[index];
+
+                        final jugador = state.jugadores[index];
+                        final isSelected = selectedItems.contains(jugador);
+
+                        return ListTile(
+                          title: Text(jugador.nombre),
+                          subtitle: Text(
+                              'Ataque: ${jugador.ataque}, Defensa: ${jugador.defensa}'),
+                          leading: Checkbox(
+                            value: isSelected,
+                            onChanged: (_) {
+                              toggleSelection(jugador);
+                            },
+                          ),
+                          onTap: () {
+                            toggleSelection(jugador);
+                          },
+                        );
+                      }),
+                )
+              ],
+            )
         };
       }),
       bottomNavigationBar: BottomAppBar(
@@ -168,7 +171,7 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  widget.nivelarEquipos(context,selectedItems.toList());
+                  widget.nivelarEquipos(context, selectedItems.toList());
                 },
                 child: Text('Nivelar'),
               ),

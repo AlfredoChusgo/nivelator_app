@@ -6,37 +6,42 @@ import 'package:nivelador_app/bloc/Nivelator/bloc/nivelator_bloc.dart';
 import '../../main2.dart';
 import '../../models/models.dart';
 
-class NivelatorPage extends StatelessWidget {
+class NivelatorPageResults extends StatelessWidget {
+  late List<Team> teams;
+  late NivelateEvent nivelateEvent;
+  NivelatorPageResults({required this.teams, required this.nivelateEvent});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Jugadores Grupos'),
-        ),
-        body: BlocBuilder<NivelatorBloc, NivelatorState>(
-          builder: (context, state) {
-
-            return switch (state){
-              NivelatorLoadingState() => const Center(child: CircularProgressIndicator()),
-              NivelatorLoadedState() => ListView.builder(
-              itemCount: state.results.length,
-              itemBuilder: (context, index) {
-                return GroupCard(
-                  groupName: 'Grupo ${index + 1}',
-                  team: state.results[index],
-                );
+          title: Text('Equipos Balanceados'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                    context.read<NivelatorBloc>().add(nivelateEvent);    
               },
-            )
-
-
-            };
+            ),
+          ],
+        ),
+        body: ListView.builder(
+          itemCount: teams.length,
+          itemBuilder: (context, index) {
+            return GroupCard(
+              groupName: 'Equipo ${index + 1}',
+              team: teams[index],
+            );
           },
         ),
       ),
     );
   }
-
 }
 
 class GroupCard extends StatelessWidget {
