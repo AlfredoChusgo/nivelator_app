@@ -12,7 +12,7 @@ class NivelatorLoadingState extends NivelatorState {
 }
 
 class NivelatorLoadedState extends NivelatorState {
-  List<List<Jugador>> results;
+  List<Team> results;
   NivelatorLoadedState({required this.results});
 
   @override

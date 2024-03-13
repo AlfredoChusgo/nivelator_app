@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:nivelador_app/data/jugador_repository_interface.dart';
 
 import '../../jugador_database.dart';
 import '../../main2.dart';
@@ -13,8 +14,8 @@ part 'jugador_state.dart';
 
 class JugadoresBloc extends Bloc<JugadoresEvent, JugadoresState> {
   //final JugadorDatabase jugadorRepository;
-
-  JugadoresBloc() : super(JugadoresLoadingState()) {
+  final IJugadorRepository jugadoresRepository;
+  JugadoresBloc({required IJugadorRepository  this.jugadoresRepository}) : super(JugadoresLoadingState()) {
     on<LoadJugadoresEvent>(_onLoadJugadoresEvent);
     on<CrearJugadorEvent>(_onCrearJugadorEvent);
     on<EditJugadorEvent>(_onEditJugadorEvent);
@@ -23,19 +24,20 @@ class JugadoresBloc extends Bloc<JugadoresEvent, JugadoresState> {
 
   FutureOr<void> _onLoadJugadoresEvent(LoadJugadoresEvent event, Emitter<JugadoresState> emit) async {
     emit(JugadoresLoadingState());
-    var jugadores = await  JugadorDatabase.getJugadores();
+    //var jugadores = await  JugadorDatabase.getJugadores();
+    var jugadores = await  jugadoresRepository.getJugadores();
     emit(JugadoresLoadedState(jugadores: jugadores));
   }
 
   FutureOr<void> _onEliminarJugadorEvent(EliminarJugadorEvent event, Emitter<JugadoresState> emit) async {
-    await JugadorDatabase.deleteJugador(event.id);
+    await jugadoresRepository.deleteJugador(event.id);
   }
 
   FutureOr<void> _onEditJugadorEvent(EditJugadorEvent event, Emitter<JugadoresState> emit) async {
-    await JugadorDatabase.updateJugador(event.jugador);
+    await jugadoresRepository.updateJugador(event.jugador.id,event.jugador);
   }
 
   FutureOr<void> _onCrearJugadorEvent(CrearJugadorEvent event, Emitter<JugadoresState> emit) async {
-    await JugadorDatabase.insertJugador(event.jugador);
+    await jugadoresRepository.createJugador(event.jugador);
   }
 }

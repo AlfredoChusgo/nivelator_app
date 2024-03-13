@@ -5,15 +5,6 @@ import 'main2.dart';
 import 'models/models.dart';
 
 class JugadorDatabase {
-  //static final JugadorDatabase _instance = JugadorDatabase._();
-
-  //factory JugadorDatabase() => _instance;
-
-  // static Database database ;
-
-  // JugadorDatabase._(){
-  //   database = database();
-  // };
 
   static Future<Database> get database async {
 
@@ -43,7 +34,7 @@ class JugadorDatabase {
             nombre TEXT,
             grupos TEXT
           )
-        ''');       
+        ''');
 
       },
     );
@@ -101,5 +92,4 @@ Future<List<ListaEquipoBalanceado>> getAllListaEquipoBalanceado() async {
       whereArgs: [id],
     );
   }
-  ///
 }

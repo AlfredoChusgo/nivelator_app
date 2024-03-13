@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/bloc/Nivelator/bloc/nivelator_bloc.dart';
 
-import '../main2.dart';
-import '../models/models.dart';
+import '../../main2.dart';
+import '../../models/models.dart';
 
 class NivelatorPage extends StatelessWidget {
   @override
@@ -24,7 +24,7 @@ class NivelatorPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GroupCard(
                   groupName: 'Grupo ${index + 1}',
-                  jugadores: state.results[index],
+                  jugadores: state.results[index].players,
                 );
               },
             )
