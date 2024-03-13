@@ -5,15 +5,14 @@ import 'package:faker/faker.dart';
 import '../models/models.dart';
 
 class TeamGenerator {
-List<Team> monteCarloBalance(List<Jugador> players, int numTeams, {num defensaWeight = 1, num ataqueWeight = 1, num salvadaWeight = 1,
- num saqueWeight = 1, num servidaWeight = 1, num teamplayWeight = 1}) {
+List<Team> monteCarloBalance(List<Jugador> players, int numTeams, ScoreWeightConfiguration configuration) {
   Random random = Random();
   List<Team> bestTeams = List.empty(growable: true);
   num bestDifference = 2147483647;
-  int iterations = 100000;
+  int iterations = 1000000;
 
   for (int i = 0; i < iterations; i++) {
-    List<Team> currentTeams = List.generate(numTeams, (_) => Team.Empty());
+    List<Team> currentTeams = List.generate(numTeams, (_) => Team(players: [],configuration: configuration));
 
     // Shuffle players randomly
     List<Jugador> shuffledPlayers = List.from(players);
@@ -25,21 +24,9 @@ List<Team> monteCarloBalance(List<Jugador> players, int numTeams, {num defensaWe
     }
 
     // Calculate the difference in total scores between teams
-    num maxScore = currentTeams.map((team) => team.getTotalScore(
-      defensaWeight: defensaWeight, 
-      ataqueWeight: ataqueWeight,
-      salvadaWeight: salvadaWeight,
-      saqueWeight: saqueWeight,
-      servidaWeight: servidaWeight,
-      teamplayWeight: teamplayWeight)).reduce(max);
+    num maxScore = currentTeams.map((team) => team.getTotalScore()).reduce(max);
 
-    num minScore = currentTeams.map((team) => team.getTotalScore(
-      defensaWeight: defensaWeight, 
-      ataqueWeight: ataqueWeight,
-      salvadaWeight: salvadaWeight,
-      saqueWeight: saqueWeight,
-      servidaWeight: servidaWeight,
-      teamplayWeight: teamplayWeight)).reduce(min);
+    num minScore = currentTeams.map((team) => team.getTotalScore()).reduce(min);
 
     num difference = maxScore - minScore;
 
@@ -77,7 +64,7 @@ void main() {
 
 
   int numTeams = 5;
-  List<Team> teams = TeamGenerator().monteCarloBalance(jugadores, numTeams, defensaWeight: 0.5, ataqueWeight: 1,salvadaWeight: 0.25,saqueWeight: 0.1,servidaWeight: 0.7,teamplayWeight: 0.3);
+  List<Team> teams = TeamGenerator().monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
 
 
   // Print teams and their total scores

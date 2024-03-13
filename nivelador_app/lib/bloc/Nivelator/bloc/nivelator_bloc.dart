@@ -25,7 +25,7 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
     int numTeams = 4;
-    List<Team> equipos = TeamGenerator().monteCarloBalance(jugadores, numTeams, defensaWeight: 0.5, ataqueWeight: 1,salvadaWeight: 0.25,saqueWeight: 0.1,servidaWeight: 0.7,teamplayWeight: 0.3);
+    List<Team> equipos = TeamGenerator().monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
     
     emit(NivelatorLoadedState(results: equipos));
   }

@@ -24,7 +24,7 @@ class NivelatorPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GroupCard(
                   groupName: 'Grupo ${index + 1}',
-                  jugadores: state.results[index].players,
+                  team: state.results[index],
                 );
               },
             )
@@ -41,9 +41,9 @@ class NivelatorPage extends StatelessWidget {
 
 class GroupCard extends StatelessWidget {
   final String groupName;
-  final List<Jugador> jugadores;
+  final Team team;
 
-  GroupCard({required this.groupName, required this.jugadores});
+  GroupCard({required this.groupName, required this.team});
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +61,28 @@ class GroupCard extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: jugadores.length,
+            physics: ClampingScrollPhysics(),
+            itemCount: team.players.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text('ID: ${jugadores[index].id}'),
-                subtitle: Text('Nombre: ${jugadores[index].nombre}'),
+                title: Text('ID: ${team.players[index].id}'),
+                subtitle: Text('Nombre: ${team.players[index].nombre}'),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('Ataque: ${jugadores[index].ataque}'),
-                    Text('Defensa: ${jugadores[index].defensa}'),
+                    Text('Ataque: ${team.players[index].ataque}'),
+                    Text('Defensa: ${team.players[index].defensa}'),
                   ],
                 ),
               );
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Score : ${team.getTotalScore()}",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
