@@ -1,6 +1,19 @@
 part of 'listas_guardadas_bloc.dart';
 
 @immutable
-sealed class ListasGuardadasState {}
+sealed class ListasGuardadasState extends Equatable{
+    @override
+  List<Object?> get props => [];
+}
 
-final class ListasGuardadasInitial extends ListasGuardadasState {}
+final class ListasGuardadasLoading extends ListasGuardadasState {}
+
+
+class ListasGuardadasLoaded extends ListasGuardadasState {
+  List<ListaEquipoBalanceado> results;
+
+  ListasGuardadasLoaded({required this.results });
+
+  @override
+  List<Object?> get props => [results];
+}

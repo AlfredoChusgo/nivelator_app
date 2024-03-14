@@ -20,7 +20,20 @@ class NivelatorPageResults extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: () {},
+              onPressed: () async {
+                final result = await showDialog(context: context, builder: (BuildContext dialogBuildContext){
+                  return SaveEquiposBalanceadosDialog();
+                });
+
+                if (result != null) {
+                  context.read<NivelatorBloc>().add(SaveEquiposBalanceadosEvent(nombreLista: result['nombre'], teams: teams));
+                  //Navigator.of(context).pop(context);
+                  //Navigator.pop(context);
+                } else {
+                  print('Dialog closed without returning any value');
+                }
+
+              },
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
@@ -30,25 +43,34 @@ class NivelatorPageResults extends StatelessWidget {
             ),
           ],
         ),
-        body: ListView.builder(
-          itemCount: teams.length,
-          itemBuilder: (context, index) {
-            return GroupCard(
-              groupName: 'Equipo ${index + 1}',
-              team: teams[index],
-            );
-          },
-        ),
+        body: ListaEquipoBalanceadoWidget(teams: teams),
       ),
     );
   }
 }
 
-class GroupCard extends StatelessWidget {
+class ListaEquipoBalanceadoWidget extends StatelessWidget{
+  late List<Team> teams;
+  ListaEquipoBalanceadoWidget({required this.teams});
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+          itemCount: teams.length,
+          itemBuilder: (context, index) {
+            return TeamGroupCard(
+              groupName: 'Equipo ${index + 1}',
+              team: teams[index],
+            );
+          },
+        );
+  }
+}
+
+class TeamGroupCard extends StatelessWidget {
   final String groupName;
   final Team team;
 
-  GroupCard({required this.groupName, required this.team});
+  TeamGroupCard({required this.groupName, required this.team});
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +113,59 @@ class GroupCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class SaveEquiposBalanceadosDialog extends StatefulWidget {
+  
+  @override
+  _SaveEquiposBalanceadosDialogState createState() => _SaveEquiposBalanceadosDialogState();
+}
+
+class _SaveEquiposBalanceadosDialogState extends State<SaveEquiposBalanceadosDialog> {
+  String nombre = '';  
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Enter Details'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(labelText: 'Nombre'),
+            onChanged: (value) {
+              setState(() {
+                nombre = value;
+              });
+            },
+          ),
+          // SizedBox(height: 20),
+          // TextField(
+          //   enabled: false,
+          //   decoration: InputDecoration(labelText: 'DateTime'),
+          //   controller: TextEditingController(text: dateTime.toIso8601String()),
+          //   ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            // Handle save operation here
+            // For example, you can pass the entered values back to the caller
+            Navigator.of(context).pop({'nombre': nombre});
+          },
+          child: Text('Guardar'),
+        ),
+      ],
     );
   }
 }

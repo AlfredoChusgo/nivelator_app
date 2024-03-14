@@ -13,3 +13,13 @@ class NivelateEvent extends NivelatorEvent{
   @override
   List<Object?> get props => [cantidadEquipos,jugadoresPorEquipo,jugadores];
 }
+
+class SaveEquiposBalanceadosEvent extends NivelatorEvent{  
+  String nombreLista;
+  List<Team> teams;
+
+  SaveEquiposBalanceadosEvent({required this.nombreLista,required this.teams});
+
+  @override
+  List<Object?> get props => [nombreLista,teams];
+}

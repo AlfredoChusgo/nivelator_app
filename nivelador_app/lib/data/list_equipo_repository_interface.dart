@@ -1,7 +1,7 @@
 import '../models/models.dart';
 
 abstract class IListaEquipoRepository{
-  Future<List<ListaEquipoBalanceado>> getListaEquipo();
-  Future<void> saveListaEquipo();
-  Future<void> deleteJugador();
+  Future<List<ListaEquipoBalanceado>> getAllListaEquipo();
+  Future<void> saveListaEquipo(ListaEquipoBalanceado listaEquipoBalanceado);
+  Future<void> deleteListaEquipo(String id);
 }

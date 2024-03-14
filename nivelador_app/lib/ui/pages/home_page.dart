@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/ui/pages/production_app.dart';
 
 import 'jugadores_list_page.dart';
+import 'list_equipo_balanceado_home.dart';
 
 
 
@@ -64,7 +65,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         Container(
             color: Colors.green,
             alignment: Alignment.center,
-            child: JugadoresListScreen()),
+            child: ListaEquipoBalanceadoHome()),
         //child: const EstadiaPacienteHomePage()),
       ][currentPageIndex],
     );
