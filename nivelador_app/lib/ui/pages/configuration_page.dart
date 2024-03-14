@@ -96,12 +96,12 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
     });
   }
 
-  void toggleAll(List<Jugador> item) {
+  void toggleAll(List<Jugador> listaJugadores) {
     setState(() {
-      if (selectedItems.length == item.length) {
+      if (selectedItems.length == listaJugadores.length) {
         selectedItems = [];
       } else {
-        selectedItems = item;
+        selectedItems = [...listaJugadores];
       }
     });
   }
