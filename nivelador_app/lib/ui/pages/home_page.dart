@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/ui/pages/production_app.dart';
 
+import 'configuration_page.dart';
 import 'jugadores_list_page.dart';
 import 'list_equipo_balanceado_home.dart';
 
@@ -52,7 +53,11 @@ class _NavigationExampleState extends State<NavigationExample> {
           ),
           NavigationDestination(
             icon: Icon(Icons.list),
-            label: 'Listas',
+            label: 'Equipos Balanceados',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.list),
+            label: 'Nivelar',
           )
         ],
       ),
@@ -66,6 +71,10 @@ class _NavigationExampleState extends State<NavigationExample> {
             color: Colors.green,
             alignment: Alignment.center,
             child: ListaEquipoBalanceadoHome()),
+        Container(
+            color: Colors.green,
+            alignment: Alignment.center,
+            child: ConfigurationPage()),
         //child: const EstadiaPacienteHomePage()),
       ][currentPageIndex],
     );

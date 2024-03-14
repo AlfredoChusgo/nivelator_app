@@ -17,21 +17,21 @@ class JugadoresListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.navigate_next),
-            onPressed: () {
-              //Navigate to the NewScreen when the button is pressed
-              //context.read<NivelatorBloc>().add(NivelateEvent());
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  //builder: (context) => NivelatorPage(),
-                  builder: (context) => ConfigurationPage(),
-                ),
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.navigate_next),
+        //     onPressed: () {
+        //       //Navigate to the NewScreen when the button is pressed
+        //       //context.read<NivelatorBloc>().add(NivelateEvent());
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(
+        //           //builder: (context) => NivelatorPage(),
+        //           builder: (context) => ConfigurationPage(),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
         title: Text('Lista de Jugadores'),
       ),
       body: BlocBuilder<JugadoresBloc, JugadoresState>(
@@ -183,7 +183,7 @@ class EditarJugadorScreen extends StatelessWidget {
 
     nombreController = TextEditingController(text: this.jugador.nombre);
     ataqueController = TextEditingController( text : this.jugador.ataque.toString());
-    defensaController = TextEditingController(text : this.jugador.defensa.toString());
+    defensaController = TextEditingController(text : jugador.defensa.toString());
     salvadaController = TextEditingController(text : this.jugador.salvada.toString());
     servidaController = TextEditingController(text : this.jugador.servida.toString());
     teamplayController = TextEditingController(text : this.jugador.teamplay.toString());
@@ -219,6 +219,26 @@ class EditarJugadorScreen extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Defensa'),
                 keyboardType: TextInputType.number,
                 controller: defensaController,
+              ),
+                            TextFormField(
+                decoration: InputDecoration(labelText: 'Salvada'),
+                keyboardType: TextInputType.number,
+                controller: salvadaController,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'servida'),
+                keyboardType: TextInputType.number,
+                controller: servidaController,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Teamplay'),
+                keyboardType: TextInputType.number,
+                controller: teamplayController,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Saque'),
+                keyboardType: TextInputType.number,
+                controller: saqueController,
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
