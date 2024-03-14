@@ -5,13 +5,13 @@ sealed class NivelatorEvent extends Equatable{}
 
 class NivelateEvent extends NivelatorEvent{
   int cantidadEquipos;
-  int jugadoresPorEquipo;
+  int cantidadIteraciones;
   List<Jugador> jugadores;
 
-  NivelateEvent({required this.cantidadEquipos,required this.jugadoresPorEquipo,required this.jugadores});
+  NivelateEvent({required this.cantidadEquipos,required this.cantidadIteraciones,required this.jugadores});
 
   @override
-  List<Object?> get props => [cantidadEquipos,jugadoresPorEquipo,jugadores];
+  List<Object?> get props => [cantidadEquipos,cantidadIteraciones,jugadores];
 }
 
 class SaveEquiposBalanceadosEvent extends NivelatorEvent{  

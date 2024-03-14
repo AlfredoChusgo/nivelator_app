@@ -5,17 +5,18 @@ import 'package:faker/faker.dart';
 import '../models/models.dart';
 
 class TeamGenerator {
-  Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,
-      ScoreWeightConfiguration configuration) async {
+  Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
+      ScoreWeightConfiguration configuration,{required Function(double) onProgress}) async {
     Random random = Random();
     List<Team> bestTeams = List.empty(growable: true);
     num bestDifference = 2147483647;
-    int iterations = 1000000;
+    int iterations = cantidadIteraciones;
 
     for (int i = 0; i < iterations; i++) {
 
       if (i % 100 == 0) {
         await Future.delayed(Duration.zero);
+        onProgress( (i+1)/iterations);
       }
       List<Team> currentTeams = List.generate(
           numTeams, (_) => Team(players: [], configuration: configuration));
@@ -70,7 +71,7 @@ void main() async{
 
   int numTeams = 5;
   List<Team> teams = await TeamGenerator()
-      .monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
+      .monteCarloBalance(jugadores, numTeams, 10000000,ScoreWeightConfiguration.simple,onProgress: (p0) {},);
 
   // Print teams and their total scores
   for (int i = 0; i < teams.length; i++) {

@@ -17,28 +17,36 @@ part 'nivelator_state.dart';
 class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
   late IListaEquipoRepository listaEquipoBalancecadoRepository;
 
-  NivelatorBloc({required this.listaEquipoBalancecadoRepository}) : super(NivelatorInitialState()) {
+  NivelatorBloc({required this.listaEquipoBalancecadoRepository})
+      : super(NivelatorInitialState()) {
     on<NivelateEvent>(_onNivelateEvent);
     on<SaveEquiposBalanceadosEvent>(_onSaveEquiposBalanceadosEvent);
   }
 
   FutureOr<void> _onNivelateEvent(
       NivelateEvent event, Emitter<NivelatorState> emit) async {
-    var jugadores =event.jugadores;
+    var jugadores = event.jugadores;
 
     // DivisorDeJugadores divisor = DivisorDeJugadores(
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
-    int numTeams = 4;
-    emit(NivelatorLoadingState());
-    List<Team> equipos = await TeamGenerator().monteCarloBalance(jugadores, numTeams, ScoreWeightConfiguration.simple);
-    emit(NivelatorLoadedState(results: equipos,nivelateEvent: event));
+    emit(NivelatorLoadingState(progress: 0));
+    List<Team> equipos = await TeamGenerator().monteCarloBalance(
+        jugadores,
+        event.cantidadEquipos,
+        event.cantidadIteraciones,
+        ScoreWeightConfiguration.simple,onProgress: (p0) => emit(NivelatorLoadingState(progress: p0)));
+    
+    emit(NivelatorLoadedState(results: equipos, nivelateEvent: event));
   }
 
-  FutureOr<void> _onSaveEquiposBalanceadosEvent(SaveEquiposBalanceadosEvent event, Emitter<NivelatorState> emit) {
-    listaEquipoBalancecadoRepository.saveListaEquipo(
-      ListaEquipoBalanceado(id: const Uuid().v4(), nombre: event.nombreLista, equipos: event.teams, dateTime: DateTime.now())
-    );
+  FutureOr<void> _onSaveEquiposBalanceadosEvent(
+      SaveEquiposBalanceadosEvent event, Emitter<NivelatorState> emit) {
+    listaEquipoBalancecadoRepository.saveListaEquipo(ListaEquipoBalanceado(
+        id: const Uuid().v4(),
+        nombre: event.nombreLista,
+        equipos: event.teams,
+        dateTime: DateTime.now()));
     //emit(NivelatorLoadingState());
   }
 }

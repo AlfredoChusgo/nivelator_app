@@ -23,7 +23,7 @@ class ConfigurationPage extends StatelessWidget {
 
 class NiveladorEquipos extends StatelessWidget {
   final TextEditingController equiposController = TextEditingController();
-  final TextEditingController jugadoresController = TextEditingController();
+  final TextEditingController iteracionesController = TextEditingController(text: "1000000");
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +40,14 @@ class NiveladorEquipos extends StatelessWidget {
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 20),
-              Text('Cantidad de Jugadores:'),
+              Text('Cantidad de Iteraciones:'),
               TextField(
-                controller: jugadoresController,
+                controller: iteracionesController,
                 keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'un numero entre 1000 - 1000000', // This is the label text
+                ),
+                
               ),
             ],
           ),
@@ -51,7 +55,7 @@ class NiveladorEquipos extends StatelessWidget {
         Expanded(
             child: SelectJugadoresPage(
                 equiposController: equiposController,
-                jugadoresController: jugadoresController))
+                iteracionesController: iteracionesController))
       ],
     );
   }
@@ -59,20 +63,20 @@ class NiveladorEquipos extends StatelessWidget {
 
 class SelectJugadoresPage extends StatefulWidget {
   final TextEditingController equiposController;
-  final TextEditingController jugadoresController;
+  final TextEditingController iteracionesController;
   SelectJugadoresPage(
       {required TextEditingController this.equiposController,
-      required TextEditingController this.jugadoresController});
+      required TextEditingController this.iteracionesController});
   @override
   _SelectJugadoresPageState createState() => _SelectJugadoresPageState();
 
   void nivelarEquipos(BuildContext context, List<Jugador> jugadores) {
     final int cantidadEquipos = int.tryParse(equiposController.text) ?? 0;
-    final int cantidadJugadores = int.tryParse(jugadoresController.text) ?? 0;
+    final int cantidadIteraciones = int.tryParse(iteracionesController.text) ?? 0;
 
     context.read<NivelatorBloc>().add(NivelateEvent(
         cantidadEquipos: cantidadEquipos,
-        jugadoresPorEquipo: cantidadJugadores,
+        cantidadIteraciones: cantidadIteraciones,
         jugadores: jugadores));
 
     Navigator.of(context).push(

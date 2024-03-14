@@ -17,7 +17,11 @@ class NivelatorPageHome extends StatelessWidget {
 
             return switch (state){
               NivelatorInitialState() => const Center(child: CircularProgressIndicator()),
-              NivelatorLoadingState() => const Center(child: CircularProgressIndicator()),
+              NivelatorLoadingState() => Center(child: CircularProgressIndicator(
+                value: state.progress,
+                strokeWidth: 5,
+
+              )),
               NivelatorLoadedState() => NivelatorPageResults(teams: state.results,nivelateEvent: state.nivelateEvent,)
             };
           },
