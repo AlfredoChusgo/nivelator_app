@@ -1,12 +1,12 @@
 class Jugador {
   String id;
   String nombre;
-  int ataque;
-  int defensa;
-  int salvada;
-  int servida;
-  int teamplay;
-  int saque;
+  num ataque;
+  num defensa;
+  num salvada;
+  num servida;
+  num teamplay;
+  num saque;
 
   Jugador({
     required this.id,
@@ -31,6 +31,19 @@ class Jugador {
       'teamplay': teamplay,
       'saque': saque,
     };
+  }
+
+    factory Jugador.fromJson(Map<String, dynamic> json) {
+    return Jugador(
+      id: json['id'],
+      nombre: json['nombre'],
+      ataque: json['ataque'],
+      defensa: json['defensa'],
+      salvada: json['salvada'],
+      servida: json['servida'],
+      teamplay: json['teamplay'],
+      saque: json['saque'],
+    );
   }
 
   // Create Jugador object from Map
@@ -92,12 +105,12 @@ class Team {
         break;
 
       case ScoreWeightConfiguration.simple:
-        ataqueWeight = 0.8;
-        defensaWeight = 0.5;
-        salvadaWeight = 0.25;
-        servidaWeight = 0.7;
-        teamplayWeight = 0.3;
-        saqueWeight = 0.1;
+              ataqueWeight = 0.8;//
+        defensaWeight = 0.6;//
+        salvadaWeight = 0.5;
+        servidaWeight = 0.7;//
+        teamplayWeight = 0.35;
+        saqueWeight = 0.15;       
 
         break;
 
@@ -107,6 +120,15 @@ class Team {
         salvadaWeight = 0.40;
         servidaWeight = 0.9;
         teamplayWeight = 0.2;
+        saqueWeight = 0.1;
+
+        break;
+        case ScoreWeightConfiguration.custom:
+        ataqueWeight = 0.8;//
+        defensaWeight = 0.5;//
+        salvadaWeight = 0.30;
+        servidaWeight = 0.7;//
+        teamplayWeight = 0.3;
         saqueWeight = 0.1;
 
         break;
@@ -139,6 +161,23 @@ class Team {
       configuration: ScoreWeightConfiguration.values
           .firstWhere((e) => e.toString() == map['configuration']),
     );
+  }
+
+  
+  static String toWhatsappMessage(List<Team> teams){
+    String result = "";
+
+    for (var i = 0; i < teams.length; i++) {
+      result+="``` \n Equipo ${i}```";
+      teams[i].players.forEach((element) {
+        result+="\n";
+        result+="* ${element.nombre}";
+       });
+
+      result+=" \n ----------------------";
+    }
+
+    return result;
   }
 }
 
@@ -175,9 +214,10 @@ class ListaEquipoBalanceado {
           .toList(),
     );
   }
+
 }
 
-enum ScoreWeightConfiguration { none, simple, advance }
+enum ScoreWeightConfiguration { none, simple, advance,custom }
 // class ScoreWeight {
 //   late num ataqueWeight;
 //   late num defensaWeight;

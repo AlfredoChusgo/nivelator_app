@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/bloc/Nivelator/bloc/nivelator_bloc.dart';
+import 'package:flutter/services.dart';
 
 import '../../main2.dart';
 import '../../models/models.dart';
@@ -9,7 +10,9 @@ import '../../models/models.dart';
 class NivelatorPageResults extends StatelessWidget {
   late List<Team> teams;
   late NivelateEvent nivelateEvent;
-  NivelatorPageResults({required this.teams, required this.nivelateEvent});
+  NivelatorPageResults({required this.teams, required this.nivelateEvent}){
+    Clipboard.setData(ClipboardData(text: Team.toWhatsappMessage(teams)));
+  }
 
   @override
   Widget build(BuildContext context) {
