@@ -294,6 +294,26 @@ const jsonData = '''[
     "servida": 60,
     "teamplay": 50,
     "saque": 35
+  },
+    {
+    "id": "30",
+    "nombre": "Josue z",
+    "ataque": 38,
+    "defensa": 45,
+    "salvada": 40,
+    "servida": 45,
+    "teamplay": 40,
+    "saque": 30
+  },
+    {
+    "id": "31",
+    "nombre": "Juan Z",
+    "ataque": 38,
+    "defensa": 45,
+    "salvada": 40,
+    "servida": 45,
+    "teamplay": 40,
+    "saque": 30
   }
   ] ''';
 
