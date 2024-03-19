@@ -8,26 +8,64 @@ import '../../main2.dart';
 import '../../models/models.dart';
 
 class NivelatorPageHome extends StatelessWidget {
+  //ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: BlocBuilder<NivelatorBloc, NivelatorState>(
-          builder: (context, state) {
+        body: BlocListener<NivelatorBloc, NivelatorState>(
+          listener: (context, state) {
+            if (state is NivelatorLoadingState) {
+              // Scroll to the bottom when the state is loading
+              // final double old = scrollController.position.pixels;
+              // final double oldMax = scrollController.position.maxScrollExtent;
 
-            return switch (state){
-              NivelatorInitialState() => const Center(child: LinearProgressIndicator()),
-              NivelatorLoadingState() => Center(child: LinearProgressIndicator(
-                value: state.progress,
-              )),
-              NivelatorLoadedState() => NivelatorPageResults(teams: state.results,nivelateEvent: state.nivelateEvent,)
-            };
+              // WidgetsBinding.instance.addPostFrameCallback((_) {
+              //   if (old > 0.0) {
+              //     final diff =
+              //         scrollController.position.maxScrollExtent - oldMax;
+              //     scrollController.jumpTo(old + diff);
+              //   }
+              // });
+            }
           },
+          child: BlocBuilder<NivelatorBloc, NivelatorState>(
+            builder: (context, state) {
+              return switch (state) {
+                NivelatorInitialState() =>
+                  const Center(child: LinearProgressIndicator()),
+                NivelatorLoadingState() => Column(
+                    children: [
+                      LinearProgressIndicator(
+                        value: state.progress,
+                      ),
+                      Text(
+                        '${(state.progress * 100).toStringAsFixed(0)}%',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Expanded(child:   Text(state.statusUpdate))
+                      // Expanded(
+                      //     child: ListView.builder(
+                      //   //controller: scrollController,
+                      //   itemCount: state.statusUpdate.length,
+                      //   reverse: true,
+                      //   itemBuilder: (context, index) {
+                      //     return ListTile(
+                      //       title: Text(state.statusUpdate[index]),
+                      //     );
+                      //   },
+                      // ))
+                    ],
+                  ),
+                NivelatorLoadedState() => NivelatorPageResults(
+                    teams: state.results,
+                    nivelateEvent: state.nivelateEvent,
+                  )
+              };
+            },
+          ),
         ),
       ),
     );
   }
-
 }
-
-

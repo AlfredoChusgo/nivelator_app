@@ -11,6 +11,7 @@ class TeamGenerator {
     num bestDifference = 2147483647;
     int iterations = cantidadIteraciones;
 
+    String log = "";
     for (int i = 0; i < iterations; i++) {
 
 
@@ -43,7 +44,8 @@ class TeamGenerator {
 
       if (i % 100 == 0) {
         await Future.delayed(Duration.zero);
-        onProgress( (i+1)/iterations,logTeamsInfo(currentTeams));
+        log = logTeamsInfo(currentTeams);
+        onProgress( (i+1)/iterations,log);
       }
     }
 
@@ -57,7 +59,8 @@ class TeamGenerator {
       result+=" \n Equipo ${i} score: ${teams[i].getTotalScore()}";
       teams[i].players.forEach((element) {
         result+="\n";
-        result+="* ${element.getNameAndScore(teams[i].configuration)}";
+        // result+="* ${element.getNameAndScore(teams[i].configuration)}";
+        result+="* ${element}";
        });
 
       result+=" \n ----------------------";
