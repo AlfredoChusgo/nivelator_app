@@ -6,18 +6,14 @@ import '../models/models.dart';
 
 class TeamGenerator {
   Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
-      ScoreWeightConfiguration configuration,{required Function(double) onProgress}) async {
-    Random random = Random();
+      ScoreWeightConfiguration configuration,{required Function(double,String) onProgress}) async {    
     List<Team> bestTeams = List.empty(growable: true);
     num bestDifference = 2147483647;
     int iterations = cantidadIteraciones;
 
     for (int i = 0; i < iterations; i++) {
 
-      if (i % 100 == 0) {
-        await Future.delayed(Duration.zero);
-        onProgress( (i+1)/iterations);
-      }
+
       List<Team> currentTeams = List.generate(
           numTeams, (_) => Team(players: [], configuration: configuration));
 
@@ -35,7 +31,7 @@ class TeamGenerator {
           currentTeams.map((team) => team.getTotalScore()).reduce(max);
 
       num minScore =
-          currentTeams.map((team) => team.getTotalScore()).reduce(min);
+          currentTeams.map((team) => team.getTotalScore()).reduce(min); //todo may be divide by the number of players in the team
 
       num difference = maxScore - minScore;
 
@@ -44,9 +40,45 @@ class TeamGenerator {
         bestDifference = difference;
         bestTeams = List.from(currentTeams);
       }
+
+      if (i % 100 == 0) {
+        await Future.delayed(Duration.zero);
+        onProgress( (i+1)/iterations,logTeamsInfo(currentTeams));
+      }
     }
 
     return bestTeams;
+  }
+
+  String logTeamsInfo(List<Team> teams){
+    String result = "";
+
+    for (var i = 0; i < teams.length; i++) {
+      result+=" \n Equipo ${i} score: ${teams[i].getTotalScore()}";
+      teams[i].players.forEach((element) {
+        result+="\n";
+        result+="* ${element.getNameAndScore(teams[i].configuration)}";
+       });
+
+      result+=" \n ----------------------";
+    }
+    return result;
+  }
+
+  static String toWhatsappMessage(List<Team> teams){
+    String result = "";
+
+    for (var i = 0; i < teams.length; i++) {
+      result+="``` \n Equipo ${i}```";
+      teams[i].players.forEach((element) {
+        result+="\n";
+        result+="* ${element.nombre}";
+       });
+
+      result+=" \n ----------------------";
+    }
+
+    return result;
   }
 }
 
@@ -59,19 +91,21 @@ void main() async{
       id: faker.guid.guid(),
       //ci: faker.random.alphaNumeric(8),
       nombre: faker.person.firstName(),
-      ataque: faker.randomGenerator.integer(100, min: 0),
-      defensa: faker.randomGenerator.integer(100, min: 0),
-      salvada: faker.randomGenerator.integer(100, min: 0),
-      servida: faker.randomGenerator.integer(100, min: 0),
-      teamplay: faker.randomGenerator.integer(100, min: 0),
-      saque: faker.randomGenerator.integer(100, min: 0),
+      habilidades: JugadorHabilidades(
+          ataque: faker.randomGenerator.integer(100, min: 0),
+          defensa: faker.randomGenerator.integer(100, min: 0),
+          salvada: faker.randomGenerator.integer(100, min: 0),
+          servida: faker.randomGenerator.integer(100, min: 0),
+          teamplay: faker.randomGenerator.integer(100, min: 0),
+          saque: faker.randomGenerator.integer(100, min: 0)),
+      
     );
     jugadores.add(jugador);
   }
 
   int numTeams = 5;
   List<Team> teams = await TeamGenerator()
-      .monteCarloBalance(jugadores, numTeams, 10000000,ScoreWeightConfiguration.simple,onProgress: (p0) {},);
+      .monteCarloBalance(jugadores, numTeams, 10000000,ScoreWeightConfiguration.simple,onProgress: (p0,data) {},);
 
   // Print teams and their total scores
   for (int i = 0; i < teams.length; i++) {

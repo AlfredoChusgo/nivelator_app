@@ -46,7 +46,8 @@ class JugadoresListScreen extends StatelessWidget {
                   return ListTile(
                     title: Text(jugador.nombre),
                     subtitle: Text(
-                        'Ataque: ${jugador.ataque}, Defensa: ${jugador.defensa}'),
+                        jugador.habilidades.toString()),
+                        
                     onTap: () {
                       // Navegar a la pantalla de detalles o edición de jugador
                       Navigator.push(
@@ -149,12 +150,14 @@ class CrearJugadorScreen extends StatelessWidget {
                       jugador: Jugador(
                           id: Uuid().v4(),
                           nombre: nombreController.text,
-                          ataque: int.parse(ataqueController.text),
+                          habilidades: JugadorHabilidades(
+                            ataque: int.parse(ataqueController.text),
                           defensa: int.parse(defensaController.text),
                           salvada: int.parse(salvadaController.text),
                           servida: int.parse(servidaController.text),
                           teamplay: int.parse(teamplayController.text),
                           saque: int.parse(saqueController.text),
+                          )
                           )));
                   jugadoresBloc.add(LoadJugadoresEvent());
                   Navigator.pop(context);
@@ -182,12 +185,12 @@ class EditarJugadorScreen extends StatelessWidget {
   EditarJugadorScreen({required this.jugador}){
 
     nombreController = TextEditingController(text: this.jugador.nombre);
-    ataqueController = TextEditingController( text : this.jugador.ataque.toString());
-    defensaController = TextEditingController(text : jugador.defensa.toString());
-    salvadaController = TextEditingController(text : this.jugador.salvada.toString());
-    servidaController = TextEditingController(text : this.jugador.servida.toString());
-    teamplayController = TextEditingController(text : this.jugador.teamplay.toString());
-    saqueController = TextEditingController(text : this.jugador.saque.toString());
+    ataqueController = TextEditingController( text : this.jugador.habilidades.ataque.toString());
+    defensaController = TextEditingController(text : jugador.habilidades.defensa.toString());
+    salvadaController = TextEditingController(text : this.jugador.habilidades.salvada.toString());
+    servidaController = TextEditingController(text : this.jugador.habilidades.servida.toString());
+    teamplayController = TextEditingController(text : this.jugador.habilidades.teamplay.toString());
+    saqueController = TextEditingController(text : this.jugador.habilidades.saque.toString());
   }
 
   @override
@@ -249,13 +252,14 @@ class EditarJugadorScreen extends StatelessWidget {
                       jugador: Jugador(
                           id: jugador.id,
                           nombre: nombreController.text,
-                          ataque: int.parse(ataqueController.text),
-                          defensa: int.parse(defensaController.text),
-                          salvada: int.parse(salvadaController.text),
-                          servida: int.parse(servidaController.text),
-                          teamplay: int.parse(teamplayController.text),
-                          saque: int.parse(saqueController.text),
-                          )));
+                          habilidades: JugadorHabilidades(
+                            ataque: int.parse(ataqueController.text),
+                            defensa: int.parse(defensaController.text),
+                            salvada: int.parse(salvadaController.text),
+                            servida: int.parse(servidaController.text),
+                            teamplay: int.parse(teamplayController.text),
+                            saque: int.parse(saqueController.text),
+                          ))));
                   context.read<JugadoresBloc>().add(LoadJugadoresEvent());
                   Navigator.pop(context);
                 },

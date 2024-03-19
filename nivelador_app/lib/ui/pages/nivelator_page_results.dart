@@ -94,16 +94,22 @@ class TeamGroupCard extends StatelessWidget {
             physics: ClampingScrollPhysics(),
             itemCount: team.players.length,
             itemBuilder: (context, index) {
+              // return ListTile(
+              //   title: Text('ID: ${team.players[index].id}'),
+              //   subtitle: Text('Nombre: ${team.players[index].nombre}'),
+              //   trailing: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       // Text('Ataque: ${team.players[index].ataque}'),
+              //       // Text('Defensa: ${team.players[index].defensa}'),
+              //       Text(team.players[index].habilidades.toString())
+              //     ],
+              //   ),
+              // );
+              var jugador = team.players[index];
               return ListTile(
-                title: Text('ID: ${team.players[index].id}'),
-                subtitle: Text('Nombre: ${team.players[index].nombre}'),
-                trailing: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('Ataque: ${team.players[index].ataque}'),
-                    Text('Defensa: ${team.players[index].defensa}'),
-                  ],
-                ),
+                title: Text('${jugador.nombre} - Score : ${jugador.getScore(team.configuration).round()}'),
+                subtitle:  Text(team.players[index].habilidades.toString())
               );
             },
           ),

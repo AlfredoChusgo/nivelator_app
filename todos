@@ -1,0 +1,12 @@
+change cantidad de iteraciones to a enum dropdown  (low 1000, medium , high , ultra high);
+mostrar un log de las iteraciones mientras se espera la nivelacion 
+agregar persistencia firebase
+resolver estado por usuarios agregar login 
+cambiar input text de cantidad de equipos a dropdown entre 2-6
+agregar buscador
+copiar la lista del whatsapp y convertirla a una lista de jugadores seleccionados 
+agregar el copy button de los equipos generados 
+
+agregar una opcion en el nivelator que permita generar N veces diferentes combinaciones 
+
+las caracteristicas de los juegadores deberian ser configurables no estaticas

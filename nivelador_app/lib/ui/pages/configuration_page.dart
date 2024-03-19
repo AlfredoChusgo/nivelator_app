@@ -146,7 +146,8 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
                         return ListTile(
                           title: Text(jugador.nombre),
                           subtitle: Text(
-                              'Ataque: ${jugador.ataque}, Defensa: ${jugador.defensa}'),
+                              // 'Ataque: ${jugador.ataque}, Defensa: ${jugador.defensa}'),
+                              jugador.toString()),
                           leading: Checkbox(
                             value: isSelected,
                             onChanged: (_) {

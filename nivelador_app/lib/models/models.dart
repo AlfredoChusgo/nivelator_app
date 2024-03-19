@@ -1,68 +1,147 @@
+import 'dart:convert';
+
 class Jugador {
   String id;
-  String nombre;
-  num ataque;
-  num defensa;
-  num salvada;
-  num servida;
-  num teamplay;
-  num saque;
+  String nombre;  
+  JugadorHabilidades habilidades;
 
   Jugador({
     required this.id,
     required this.nombre,
-    required this.ataque,
-    required this.defensa,
-    required this.salvada,
-    required this.servida,
-    required this.teamplay,
-    required this.saque,
+    required this.habilidades
   });
 
-  // Convert Jugador object to Map
+factory Jugador.fromJson(String json) {
+    final Map<String, dynamic> map = jsonDecode(json);
+    return Jugador(
+      id: map['id'],
+      nombre: map['nombre'],
+      habilidades: JugadorHabilidades(
+        ataque: map['habilidades']['ataque'],
+        defensa: map['habilidades']['defensa'],
+        salvada: map['habilidades']['salvada'],
+        servida: map['habilidades']['servida'],
+        teamplay: map['habilidades']['teamplay'],
+        saque: map['habilidades']['saque'],
+      ),
+    );
+  }
+
+  // Method to convert Jugador instance to a JSON string
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'nombre': nombre,
+      'habilidades': {
+        'ataque': habilidades.ataque,
+        'defensa': habilidades.defensa,
+        'salvada': habilidades.salvada,
+        'servida': habilidades.servida,
+        'teamplay': habilidades.teamplay,
+        'saque': habilidades.saque,
+      },
+    });
+  }
+  
+ // Method to create a Jugador instance from a Map
+  static Jugador fromMap(Map<String, dynamic> map) {
+    return Jugador(
+      id: map['id'] as String,
+      nombre: map['nombre'] as String,
+      habilidades: JugadorHabilidades(
+        ataque: map['habilidades']['ataque'] as num,
+        defensa: map['habilidades']['defensa'] as num,
+        salvada: map['habilidades']['salvada'] as num,
+        servida: map['habilidades']['servida'] as num,
+        teamplay: map['habilidades']['teamplay'] as num,
+        saque: map['habilidades']['saque'] as num,
+      ),
+    );
+  }
+
+  // Method to convert Jugador instance to a Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'nombre': nombre,
-      'ataque': ataque,
-      'defensa': defensa,
-      'salvada': salvada,
-      'servida': servida,
-      'teamplay': teamplay,
-      'saque': saque,
+      'habilidades': {
+        'ataque': habilidades.ataque,
+        'defensa': habilidades.defensa,
+        'salvada': habilidades.salvada,
+        'servida': habilidades.servida,
+        'teamplay': habilidades.teamplay,
+        'saque': habilidades.saque,
+      },
     };
-  }
-
-    factory Jugador.fromJson(Map<String, dynamic> json) {
-    return Jugador(
-      id: json['id'],
-      nombre: json['nombre'],
-      ataque: json['ataque'],
-      defensa: json['defensa'],
-      salvada: json['salvada'],
-      servida: json['servida'],
-      teamplay: json['teamplay'],
-      saque: json['saque'],
-    );
-  }
-
-  // Create Jugador object from Map
-  static Jugador fromMap(Map<String, dynamic> map) {
-    return Jugador(
-      id: map['id'],
-      nombre: map['nombre'],
-      ataque: map['ataque'],
-      defensa: map['defensa'],
-      salvada: map['salvada'],
-      servida: map['servida'],
-      teamplay: map['teamplay'],
-      saque: map['saque'],
-    );
   }
 
   @override
   String toString() {
-    return 'Jugador{id: $id, nombre: $nombre, ataque: $ataque, defensa: $defensa, salvada: $salvada, servida: $servida, teamplay: $teamplay, saque: $saque}';
+    return 'Jugador{id: $id, nombre: $nombre, ataque: ${habilidades.ataque}, defensa: ${habilidades.defensa}, salvada: ${habilidades.salvada}, servida: ${habilidades.servida}, teamplay: ${habilidades.teamplay}, saque: ${habilidades.saque}}';
+  }
+  String getNameAndScore(ScoreWeightConfiguration configuration){
+    return "$nombre -- score : ${getScore(configuration)}";
+  }
+
+  num getScore(ScoreWeightConfiguration configuration) {
+    HabilidadesPeso pesos = getHabilidadPeso(configuration);
+    num result = 0;
+
+    result += (pesos.ataque * habilidades.ataque) +
+        (pesos.defensa * habilidades.defensa) +
+        (pesos.salvada * habilidades.salvada) +
+        (pesos.servida * habilidades.servida) +
+        (pesos.teamplay * habilidades.teamplay) +
+        (pesos.saque * habilidades.saque);
+    return result;
+  }
+  
+  HabilidadesPeso getHabilidadPeso(ScoreWeightConfiguration configuration) {
+    HabilidadesPeso pesos = HabilidadesPeso.maximumWeight();
+
+    switch (configuration) {
+      case ScoreWeightConfiguration.none:
+        pesos.ataque = 1;
+        pesos.defensa = 1;
+        pesos.salvada = 1;
+        pesos.servida = 1;
+        pesos.teamplay = 1;
+        pesos.saque = 1;
+
+        break;
+
+      case ScoreWeightConfiguration.simple:
+              pesos.ataque = 0.8;//
+        pesos.defensa = 0.6;//
+        pesos.salvada = 0.5;
+        pesos.servida = 0.7;//
+        pesos.teamplay = 0.35;
+        pesos.saque = 0.15;       
+
+        break;
+
+      case ScoreWeightConfiguration.advance:
+        pesos.ataque = 0.9;
+        pesos.defensa = 0.70;
+        pesos.salvada = 0.40;
+        pesos.servida = 0.9;
+        pesos.teamplay = 0.2;
+        pesos.saque = 0.1;
+
+        break;
+        case ScoreWeightConfiguration.custom:
+        pesos.ataque = 0.8;//
+        pesos.defensa = 0.5;//
+        pesos.salvada = 0.30;
+        pesos.servida = 0.7;//
+        pesos.teamplay = 0.3;
+        pesos.saque = 0.1;
+
+        break;
+      default:
+    }
+
+    return pesos;
   }
 }
 
@@ -84,64 +163,11 @@ class Team {
     return _getTotalScore(configuration);
   }
   num _getTotalScore(ScoreWeightConfiguration configuration) {
-    num ataqueWeight = 1;
-    num defensaWeight = 1;
-    num salvadaWeight = 1;
-    num servidaWeight = 1;
-    num teamplayWeight = 1;
-    num saqueWeight = 1;
 
     num total = 0;
 
-    switch (configuration) {
-      case ScoreWeightConfiguration.none:
-        ataqueWeight = 1;
-        defensaWeight = 1;
-        salvadaWeight = 1;
-        servidaWeight = 1;
-        teamplayWeight = 1;
-        saqueWeight = 1;
-
-        break;
-
-      case ScoreWeightConfiguration.simple:
-              ataqueWeight = 0.8;//
-        defensaWeight = 0.6;//
-        salvadaWeight = 0.5;
-        servidaWeight = 0.7;//
-        teamplayWeight = 0.35;
-        saqueWeight = 0.15;       
-
-        break;
-
-      case ScoreWeightConfiguration.advance:
-        ataqueWeight = 0.9;
-        defensaWeight = 0.70;
-        salvadaWeight = 0.40;
-        servidaWeight = 0.9;
-        teamplayWeight = 0.2;
-        saqueWeight = 0.1;
-
-        break;
-        case ScoreWeightConfiguration.custom:
-        ataqueWeight = 0.8;//
-        defensaWeight = 0.5;//
-        salvadaWeight = 0.30;
-        servidaWeight = 0.7;//
-        teamplayWeight = 0.3;
-        saqueWeight = 0.1;
-
-        break;
-      default:
-    }
-
     for (Jugador jugador in players) {
-      total += (ataqueWeight * jugador.ataque) +
-          (defensaWeight * jugador.defensa) +
-          (salvadaWeight * jugador.salvada) +
-          (servidaWeight * jugador.servida) +
-          (teamplayWeight * jugador.teamplay) +
-          (saqueWeight * jugador.saque);
+      total += jugador.getScore(configuration);
     }
     return total;
   }
@@ -168,7 +194,7 @@ class Team {
     String result = "";
 
     for (var i = 0; i < teams.length; i++) {
-      result+="``` \n Equipo ${i}```";
+      result+="``` \n Equipo $i```";
       teams[i].players.forEach((element) {
         result+="\n";
         result+="* ${element.nombre}";
@@ -218,6 +244,35 @@ class ListaEquipoBalanceado {
 }
 
 enum ScoreWeightConfiguration { none, simple, advance,custom }
+
+class JugadorHabilidades {
+  num ataque;
+  num defensa;
+  num salvada;
+  num servida;
+  num teamplay;
+  num saque;
+  JugadorHabilidades({required this.ataque, required this.defensa, required this.salvada, required this.servida, required this.teamplay, required this.saque });
+
+    @override
+  String toString() {
+    return '{ataque: $ataque, defensa: $defensa, salvada: $salvada, servida: $servida, teamplay: $teamplay, saque: $saque}';
+  }
+}
+
+class HabilidadesPeso {
+  num ataque;
+  num defensa;
+  num salvada;
+  num servida;
+  num teamplay;
+  num saque;
+  HabilidadesPeso({required this.ataque, required this.defensa, required this.salvada, required this.servida, required this.teamplay, required this.saque });
+
+  factory HabilidadesPeso.maximumWeight(){
+    return HabilidadesPeso(ataque: 1, defensa: 1, salvada: 1, servida: 1, teamplay: 1, saque: 1);
+  }
+}
 // class ScoreWeight {
 //   late num ataqueWeight;
 //   late num defensaWeight;

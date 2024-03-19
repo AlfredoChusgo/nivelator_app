@@ -30,12 +30,12 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
     // DivisorDeJugadores divisor = DivisorDeJugadores(
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
-    emit(NivelatorLoadingState(progress: 0));
+    emit(NivelatorLoadingState(progress: 0,statusUpdate: ""));
     List<Team> equipos = await TeamGenerator().monteCarloBalance(
         jugadores,
         event.cantidadEquipos,
         event.cantidadIteraciones,
-        ScoreWeightConfiguration.simple,onProgress: (p0) => emit(NivelatorLoadingState(progress: p0)));
+        ScoreWeightConfiguration.simple,onProgress: (p0,statusUpdate) => emit(NivelatorLoadingState(progress: p0,statusUpdate: statusUpdate)));
     
     emit(NivelatorLoadedState(results: equipos, nivelateEvent: event));
   }

@@ -12,8 +12,8 @@ class NivelatorInitialState extends NivelatorState {
 
 class NivelatorLoadingState extends NivelatorState {
   late double progress;
-
-  NivelatorLoadingState({required this.progress});
+  late String statusUpdate;
+  NivelatorLoadingState({required this.progress, required this.statusUpdate});
 
   @override
   List<Object?> get props => [progress];
