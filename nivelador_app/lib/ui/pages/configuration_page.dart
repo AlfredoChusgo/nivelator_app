@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/bloc/bloc/jugador_bloc.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import '../../bloc/Nivelator/bloc/nivelator_bloc.dart';
 import '../../models/models.dart';
@@ -22,8 +23,11 @@ class ConfigurationPage extends StatelessWidget {
 }
 
 class NiveladorEquipos extends StatelessWidget {
-  final TextEditingController equiposController = TextEditingController();
+  final TextEditingController equiposController = TextEditingController(text: "4");
   final TextEditingController iteracionesController = TextEditingController(text: "1000000");
+
+  final GlobalKey<_IntegerPickerState> _widgetKeyIntegerPicker = GlobalKey();
+  final GlobalKey<_SelectJugadoresPageState> _widgetKeySelectJugadores = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +39,7 @@ class NiveladorEquipos extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Cantidad de Equipos:'),
-              TextField(
-                controller: equiposController,
-                keyboardType: TextInputType.number,
-              ),
+              IntegerPicker(key: _widgetKeyIntegerPicker),
               SizedBox(height: 20),
               Text('Cantidad de Iteraciones:'),
               TextField(
@@ -53,26 +54,18 @@ class NiveladorEquipos extends StatelessWidget {
           ),
         ),
         Expanded(
-            child: SelectJugadoresPage(
-                equiposController: equiposController,
-                iteracionesController: iteracionesController))
+            child: SelectJugadoresPage(key: _widgetKeySelectJugadores)
+            ),
+            FloatingActionButton.extended (onPressed: () { 
+              nivelarEquipos(context, _widgetKeyIntegerPicker.currentState?._currentValue ?? 4 , int.parse(iteracionesController.text), _widgetKeySelectJugadores.currentState?.selectedItems ?? []);
+             },
+             icon: const Icon(Icons.access_alarm_sharp),
+             label: const Text("Nivelar"),)            
       ],
     );
   }
-}
 
-class SelectJugadoresPage extends StatefulWidget {
-  final TextEditingController equiposController;
-  final TextEditingController iteracionesController;
-  SelectJugadoresPage(
-      {required TextEditingController this.equiposController,
-      required TextEditingController this.iteracionesController});
-  @override
-  _SelectJugadoresPageState createState() => _SelectJugadoresPageState();
-
-  void nivelarEquipos(BuildContext context, List<Jugador> jugadores) {
-    final int cantidadEquipos = int.tryParse(equiposController.text) ?? 0;
-    final int cantidadIteraciones = int.tryParse(iteracionesController.text) ?? 0;
+    void nivelarEquipos(BuildContext context, int cantidadEquipos, int cantidadIteraciones, List<Jugador> jugadores) {
 
     context.read<NivelatorBloc>().add(NivelateEvent(
         cantidadEquipos: cantidadEquipos,
@@ -85,6 +78,16 @@ class SelectJugadoresPage extends StatefulWidget {
       ),
     );
   }
+}
+
+class SelectJugadoresPage extends StatefulWidget {
+      final Key? key;
+
+  // Pass the key parameter to the superclass constructor
+  const SelectJugadoresPage({this.key}) : super(key: key);
+  @override
+  _SelectJugadoresPageState createState() => _SelectJugadoresPageState();
+
 }
 
 class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
@@ -122,7 +125,7 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
               children: [
                 ListTile(
                   tileColor: Theme.of(context).colorScheme.outlineVariant,
-                  title: Text("Seleccionar Todo"),
+                  title: Text("Seleccionar Todo | Cantidad : ${selectedItems.length}"),
                   leading: Checkbox(
                     value: false,
                     onChanged: (_) {
@@ -164,26 +167,78 @@ class _SelectJugadoresPageState extends State<SelectJugadoresPage> {
             )
         };
       }),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Selected Count: ${selectedItems.length}',
-                style: TextStyle(fontSize: 18),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  widget.nivelarEquipos(context, selectedItems.toList());
-                },
-                child: Text('Nivelar'),
-              ),
-            ],
-          ),
+      // bottomNavigationBar: BottomAppBar(
+      //   child: Padding(
+      //     padding: EdgeInsets.all(16.0),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: [
+      //         Text(
+      //           'Selected Count: ${selectedItems.length}',
+      //           style: TextStyle(fontSize: 18),
+      //         ),
+      //         ElevatedButton(
+      //           onPressed: () {
+      //             widget.nivelarEquipos(context, selectedItems.toList());
+      //           },
+      //           child: Text('Nivelar'),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+    );
+  }
+}
+
+
+class IntegerPicker extends StatefulWidget {
+    final Key? key;
+
+  // Pass the key parameter to the superclass constructor
+  const IntegerPicker({this.key}) : super(key: key);
+
+  @override
+  _IntegerPickerState createState() => _IntegerPickerState();
+}
+
+class _IntegerPickerState extends State<IntegerPicker> {
+  int _currentValue = 4;
+  int _minValue = 2 ;
+  int _maxValue = 8 ;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+              icon: const Icon(Icons.remove),
+              onPressed: () => setState(() {
+                if(_currentValue > _minValue){
+                  final newValue = _currentValue - 1;
+                _currentValue = newValue.clamp(0, 100);
+                }                
+              }),
+            ),
+        NumberPicker(
+          value: _currentValue,
+          minValue: _minValue,
+          maxValue: _maxValue,
+          axis: Axis.horizontal,
+          onChanged: (value) => setState(() => _currentValue = value),
         ),
-      ),
+        IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () => setState(() {
+                if(_currentValue < _maxValue){
+                  final newValue = _currentValue + 1;
+                _currentValue = newValue.clamp(0, 100);
+                }
+                
+              }),
+            ),
+      ],
     );
   }
 }
