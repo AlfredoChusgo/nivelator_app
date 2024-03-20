@@ -5,14 +5,18 @@ import 'package:faker/faker.dart';
 import '../models/models.dart';
 
 class TeamGenerator {
+  bool _cancelRequested = false;
+
   Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
-      ScoreWeightConfiguration configuration,{required Function(double,String) onProgress}) async {    
+      ScoreWeightConfiguration configuration,{required Function(double,String) onProgress}) async {
+    _cancelRequested = false;
+            
     List<Team> bestTeams = List.empty(growable: true);
     num bestDifference = 2147483647;
     int iterations = cantidadIteraciones;
 
     String log = "";
-    for (int i = 0; i < iterations; i++) {
+    for (int i = 0; i < iterations && !_cancelRequested ; i++) {
 
 
       List<Team> currentTeams = List.generate(
@@ -82,6 +86,10 @@ class TeamGenerator {
     }
 
     return result;
+  }
+
+  void cancelMonteCarloBalance() {
+    _cancelRequested = true;
   }
 }
 

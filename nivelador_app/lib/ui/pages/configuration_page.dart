@@ -105,11 +105,52 @@ class NiveladorEquipos extends StatelessWidget {
         cantidadIteraciones: cantidadIteraciones.toCantidadIteracionesValue(),
         jugadores: jugadores));
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NivelatorPageHome(),
-      ),
-    );
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => NivelatorPageHome(),
+    //   ),
+    // );
+    _showModal(context);
+  }
+
+  void _showModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: NivelatorPageHome(),
+          //title: Text('Modal Title'),
+          //child: NivelatorPageHome(),
+
+          // : <Widget>[
+          //   TextButton(
+          //     onPressed: () {
+          //       Navigator.of(context).pop();
+          //     },
+          //     child: Text('Close'),
+          //   ),
+          // ],
+          actions: [
+        TextButton(
+          onPressed: () {
+            context.read<NivelatorBloc>().add(CancelNivelateEvent());
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Close'),
+        ),
+        TextButton(
+          onPressed: () {
+            context.read<NivelatorBloc>().add(CancelNivelateEvent());            
+          },
+          child: Text('Cancel'),
+        ),
+      ],
+        );
+      },
+    ).then((value) {
+    // This code block is executed after the dialog is dismissed
+    context.read<NivelatorBloc>().add(CancelNivelateEvent());
+  });
   }
 }
 

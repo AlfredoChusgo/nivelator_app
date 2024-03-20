@@ -16,11 +16,14 @@ part 'nivelator_state.dart';
 
 class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
   late IListaEquipoRepository listaEquipoBalancecadoRepository;
-
+  late TeamGenerator teamGenerator;
   NivelatorBloc({required this.listaEquipoBalancecadoRepository})
       : super(NivelatorInitialState()) {
+
+    teamGenerator = TeamGenerator();
     on<NivelateEvent>(_onNivelateEvent);
     on<SaveEquiposBalanceadosEvent>(_onSaveEquiposBalanceadosEvent);
+    on<CancelNivelateEvent>(_onCancelNivelateEvent);
   }
 
   FutureOr<void> _onNivelateEvent(
@@ -31,7 +34,7 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
     emit(NivelatorLoadingState(progress: 0,statusUpdate: ""));
-    List<Team> equipos = await TeamGenerator().monteCarloBalance(
+    List<Team> equipos = await teamGenerator.monteCarloBalance(
         jugadores,
         event.cantidadEquipos,
         event.cantidadIteraciones,
@@ -48,5 +51,9 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
         equipos: event.teams,
         dateTime: DateTime.now()));
     //emit(NivelatorLoadingState());
+  }
+
+  FutureOr<void> _onCancelNivelateEvent(CancelNivelateEvent event, Emitter<NivelatorState> emit) {
+      teamGenerator.cancelMonteCarloBalance();
   }
 }
