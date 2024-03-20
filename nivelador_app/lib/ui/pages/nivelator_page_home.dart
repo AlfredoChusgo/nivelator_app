@@ -21,10 +21,24 @@ class NivelatorPageHome extends StatelessWidget {
                     LinearProgressIndicator(
                       value: state.progress,
                     ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Text(
                       '${(state.progress * 100).toStringAsFixed(0)}%',
-                      style: TextStyle(fontSize: 16),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
+                    IconButton.filledTonal(
+                      icon: Icon(Icons.cancel_sharp),
+                      onPressed: () {
+                        context
+                            .read<NivelatorBloc>()
+                            .add(CancelNivelateEvent());
+                      },
+                      
+                    ),
+                  ],
+                ),
                     Expanded(child:   Text(state.statusUpdate))
                     // Expanded(
                     //     child: ListView.builder(

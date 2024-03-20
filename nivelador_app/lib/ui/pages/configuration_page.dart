@@ -138,12 +138,13 @@ class NiveladorEquipos extends StatelessWidget {
           },
           child: Text('Close'),
         ),
-        TextButton(
-          onPressed: () {
-            context.read<NivelatorBloc>().add(CancelNivelateEvent());            
-          },
-          child: Text('Cancel'),
-        ),
+        // TextButton(
+        //   onPressed: () {
+        //     context.read<NivelatorBloc>().add(CancelNivelateEvent());
+            
+        //   },
+        //   child: Text('Cancel'),
+        // ),
       ],
         );
       },

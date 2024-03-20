@@ -10,62 +10,81 @@ import '../../models/models.dart';
 class NivelatorPageResults extends StatelessWidget {
   late List<Team> teams;
   late NivelateEvent nivelateEvent;
-  NivelatorPageResults({required this.teams, required this.nivelateEvent}){
-    Clipboard.setData(ClipboardData(text: Team.toWhatsappMessage(teams)));
-  }
+  NivelatorPageResults({required this.teams, required this.nivelateEvent}) {}
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Equipos Balanceados'),
-          actions: [
+    return ListaEquipoBalanceadoWidget(teams: teams);
+  }
+}
+
+class ListaEquipoBalanceadoWidget extends StatelessWidget {
+  late List<Team> teams;
+  ListaEquipoBalanceadoWidget({required this.teams});
+  @override
+  Widget build(BuildContext context) {
+    var teamsGroupCards = teams.map((e) {
+      int index = teams.indexOf(e);
+      return TeamGroupCard(
+        groupName: 'Equipo $index',
+        team: e,
+      );
+    }).toList();
+
+    var actions = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () async {
-                final result = await showDialog(context: context, builder: (BuildContext dialogBuildContext){
-                  return SaveEquiposBalanceadosDialog();
-                });
-
+                final result = await showDialog(
+                    context: context,
+                    builder: (BuildContext dialogBuildContext) {
+                      return SaveEquiposBalanceadosDialog();
+                    });
+        
                 if (result != null) {
-                  context.read<NivelatorBloc>().add(SaveEquiposBalanceadosEvent(nombreLista: result['nombre'], teams: teams));
+                  context.read<NivelatorBloc>().add(
+                      SaveEquiposBalanceadosEvent(
+                          nombreLista: result['nombre'], teams: teams));
                   //Navigator.of(context).pop(context);
                   //Navigator.pop(context);
                 } else {
                   print('Dialog closed without returning any value');
                 }
-
               },
             ),
+            // IconButton(
+            //   icon: const Icon(Icons.refresh),
+            //   onPressed: () {
+            //     //context.read<NivelatorBloc>().add(nivelateEvent);
+            //   },
+            // ),
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.copy),
               onPressed: () {
-                    context.read<NivelatorBloc>().add(nivelateEvent);    
+                //context.read<NivelatorBloc>().add(nivelateEvent);
+                Clipboard.setData(
+                    ClipboardData(text: Team.toWhatsappMessage(teams)));
               },
             ),
           ],
-        ),
-        body: ListaEquipoBalanceadoWidget(teams: teams),
+        );
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+                  Container(
+            child: actions,
+          ),
+          Column(children: [
+           
+            ...teamsGroupCards,
+             
+          ]),
+      
+        ],
       ),
     );
-  }
-}
-
-class ListaEquipoBalanceadoWidget extends StatelessWidget{
-  late List<Team> teams;
-  ListaEquipoBalanceadoWidget({required this.teams});
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-          itemCount: teams.length,
-          itemBuilder: (context, index) {
-            return TeamGroupCard(
-              groupName: 'Equipo ${index + 1}',
-              team: teams[index],
-            );
-          },
-        );
   }
 }
 
@@ -77,6 +96,10 @@ class TeamGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var tiles = team.players.map((jugador) => ListTile(
+        title: Text(
+            '${jugador.nombre} - Score : ${jugador.getScore(team.configuration).round()}'),
+        subtitle: Text(jugador.habilidades.toString())));
     return Card(
       margin: EdgeInsets.all(16.0),
       child: Column(
@@ -89,34 +112,23 @@ class TeamGroupCard extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            itemCount: team.players.length,
-            itemBuilder: (context, index) {
-              // return ListTile(
-              //   title: Text('ID: ${team.players[index].id}'),
-              //   subtitle: Text('Nombre: ${team.players[index].nombre}'),
-              //   trailing: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       // Text('Ataque: ${team.players[index].ataque}'),
-              //       // Text('Defensa: ${team.players[index].defensa}'),
-              //       Text(team.players[index].habilidades.toString())
-              //     ],
-              //   ),
-              // );
-              var jugador = team.players[index];
-              return ListTile(
-                title: Text('${jugador.nombre} - Score : ${jugador.getScore(team.configuration).round()}'),
-                subtitle:  Text(team.players[index].habilidades.toString())
-              );
-            },
-          ),
+          ...tiles,
+          // ListView.builder(
+          //   shrinkWrap: true,
+          //   physics: NeverScrollableScrollPhysics(),
+          //   itemCount: team.players.length,
+          //   itemBuilder: (context, index) {
+          //     var jugador = team.players[index];
+          //     return ListTile(
+          //         title: Text(
+          //             '${jugador.nombre} - Score : ${jugador.getScore(team.configuration).round()}'),
+          //         subtitle: Text(team.players[index].habilidades.toString()));
+          //   },
+          // ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Score : ${team.getTotalScore()}",
+              "Score : ${team.getTotalScore().round()}",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
@@ -126,15 +138,15 @@ class TeamGroupCard extends StatelessWidget {
   }
 }
 
-
 class SaveEquiposBalanceadosDialog extends StatefulWidget {
-  
   @override
-  _SaveEquiposBalanceadosDialogState createState() => _SaveEquiposBalanceadosDialogState();
+  _SaveEquiposBalanceadosDialogState createState() =>
+      _SaveEquiposBalanceadosDialogState();
 }
 
-class _SaveEquiposBalanceadosDialogState extends State<SaveEquiposBalanceadosDialog> {
-  String nombre = '';  
+class _SaveEquiposBalanceadosDialogState
+    extends State<SaveEquiposBalanceadosDialog> {
+  String nombre = '';
 
   @override
   Widget build(BuildContext context) {
