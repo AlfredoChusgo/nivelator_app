@@ -243,7 +243,46 @@ class ListaEquipoBalanceado {
 
 }
 
-enum ScoreWeightConfiguration { none, simple, advance,custom }
+enum ScoreWeightConfiguration { none, simple, advance, custom }
+enum IterationCategory {
+  veryLow,
+  low,
+  moderate,
+  high,
+  veryHigh,
+}
+
+extension IterationCategoryExtension on IterationCategory {
+  String toStringValue() {
+    switch (this) {
+      case IterationCategory.veryLow:
+        return 'Muy baja';
+      case IterationCategory.low:
+        return 'Baja';
+      case IterationCategory.moderate:
+        return 'Moderada';
+      case IterationCategory.high:
+        return 'Alta';
+      case IterationCategory.veryHigh:
+        return 'Muy alta';
+    }
+  }
+
+    int toCantidadIteracionesValue() {
+    switch (this) {
+      case IterationCategory.veryLow:
+        return 1000;
+      case IterationCategory.low:
+        return 10000;
+      case IterationCategory.moderate:
+        return 100000;
+      case IterationCategory.high:
+        return 1000000;
+      case IterationCategory.veryHigh:
+        return 3000000;
+    }
+  }
+}
 
 class JugadorHabilidades {
   num ataque;

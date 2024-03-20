@@ -23,11 +23,17 @@ class ConfigurationPage extends StatelessWidget {
 }
 
 class NiveladorEquipos extends StatelessWidget {
+  IterationCategory iterationCategory = IterationCategory.moderate;
+
   final TextEditingController equiposController = TextEditingController(text: "4");
-  final TextEditingController iteracionesController = TextEditingController(text: "1000000");
+  late TextEditingController iteracionesController = TextEditingController(text: iterationCategory.toStringValue());
 
   final GlobalKey<_IntegerPickerState> _widgetKeyIntegerPicker = GlobalKey();
   final GlobalKey<_SelectJugadoresPageState> _widgetKeySelectJugadores = GlobalKey();
+
+  // NiveladorEquipos(){
+  //   iteracionesController = TextEditingController(text: iterationCategory.toStringValue());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +47,40 @@ class NiveladorEquipos extends StatelessWidget {
               Text('Cantidad de Equipos:'),
               IntegerPicker(key: _widgetKeyIntegerPicker),
               SizedBox(height: 20),
-              Text('Cantidad de Iteraciones:'),
+              // Text('Cantidad de Iteraciones:'),
               TextField(
                 controller: iteracionesController,
+                readOnly: true,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'un numero entre 1000 - 1000000', // This is the label text
+                  labelText: 'Cantidad de iteraciones', // This is the label text
                 ),
+                onTap: () async {
+                  var result = await showModalBottomSheet<IterationCategory>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text("Iteraciones : ",style: Theme.of(context).textTheme.headlineSmall,),
+                            ListTile(title: Text("Muy Baja"),onTap: () => Navigator.of(context).pop(IterationCategory.veryLow)),
+                            ListTile(title: Text("Baja"),onTap: () => Navigator.of(context).pop(IterationCategory.low)),
+                            ListTile(title: Text("Moderada"),onTap: () => Navigator.of(context).pop(IterationCategory.moderate)),
+                            ListTile(title: Text("Alta"),onTap: () => Navigator.of(context).pop(IterationCategory.high)),
+                            ListTile(title: Text("Muy Alta"),onTap: () => Navigator.of(context).pop(IterationCategory.veryHigh)),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+
+                  if(result!=null){
+                    iterationCategory = result;
+                    iteracionesController.text = iterationCategory.toStringValue();
+                  }
+                },
                 
               ),
             ],
@@ -57,7 +90,7 @@ class NiveladorEquipos extends StatelessWidget {
             child: SelectJugadoresPage(key: _widgetKeySelectJugadores)
             ),
             FloatingActionButton.extended (onPressed: () { 
-              nivelarEquipos(context, _widgetKeyIntegerPicker.currentState?._currentValue ?? 4 , int.parse(iteracionesController.text), _widgetKeySelectJugadores.currentState?.selectedItems ?? []);
+              nivelarEquipos(context, _widgetKeyIntegerPicker.currentState?._currentValue ?? 4 , iterationCategory, _widgetKeySelectJugadores.currentState?.selectedItems ?? []);
              },
              icon: const Icon(Icons.access_alarm_sharp),
              label: const Text("Nivelar"),)            
@@ -65,11 +98,11 @@ class NiveladorEquipos extends StatelessWidget {
     );
   }
 
-    void nivelarEquipos(BuildContext context, int cantidadEquipos, int cantidadIteraciones, List<Jugador> jugadores) {
+    void nivelarEquipos(BuildContext context, int cantidadEquipos, IterationCategory  cantidadIteraciones, List<Jugador> jugadores) {
 
     context.read<NivelatorBloc>().add(NivelateEvent(
         cantidadEquipos: cantidadEquipos,
-        cantidadIteraciones: cantidadIteraciones,
+        cantidadIteraciones: cantidadIteraciones.toCantidadIteracionesValue(),
         jugadores: jugadores));
 
     Navigator.of(context).push(
