@@ -9,7 +9,7 @@ const jsonData = '''[
     "id": "1",
     "nombre": "alexander",
     "habilidades": {
-      "ataque": 30,
+      "ataque": 25,
       "defensa": 35,
       "salvada": 20,
       "servida": 40,
@@ -33,7 +33,7 @@ const jsonData = '''[
     "id": "3",
     "nombre": "Carla arevilca",
     "habilidades": {
-      "ataque": 24,
+      "ataque": 10,
       "defensa": 35,
       "salvada": 30,
       "servida": 48,
@@ -45,7 +45,7 @@ const jsonData = '''[
     "id": "4",
     "nombre": "christian rodillin",
     "habilidades": {
-      "ataque": 50,
+      "ataque": 45,
       "defensa": 35,
       "salvada": 20,
       "servida": 27,
@@ -69,7 +69,7 @@ const jsonData = '''[
     "id": "6",
     "nombre": "dalvinder",
     "habilidades": {
-      "ataque": 38,
+      "ataque": 20,
       "defensa": 30,
       "salvada": 28,
       "servida": 25,
@@ -81,7 +81,7 @@ const jsonData = '''[
     "id": "7",
     "nombre": "daniel coria",
     "habilidades": {
-      "ataque": 45,
+      "ataque": 40,
       "defensa": 78,
       "salvada": 81,
       "servida": 60,
@@ -93,7 +93,7 @@ const jsonData = '''[
     "id": "8",
     "nombre": "david juarez",
     "habilidades": {
-      "ataque": 60,
+      "ataque": 50,
       "defensa": 55,
       "salvada": 55,
       "servida": 70,
@@ -105,7 +105,7 @@ const jsonData = '''[
     "id": "9",
     "nombre": "edward",
     "habilidades": {
-      "ataque": 43,
+      "ataque": 38,
       "defensa": 35,
       "salvada": 30,
       "servida": 43,
@@ -117,7 +117,7 @@ const jsonData = '''[
     "id": "10",
     "nombre": "eduardo machaca",
     "habilidades": {
-      "ataque": 40,
+      "ataque": 38,
       "defensa": 42,
       "salvada": 38,
       "servida": 45,
@@ -129,7 +129,7 @@ const jsonData = '''[
     "id": "11",
     "nombre": "ibeth",
     "habilidades": {
-      "ataque": 30,
+      "ataque": 18,
       "defensa": 35,
       "salvada": 22,
       "servida": 35,
@@ -141,7 +141,7 @@ const jsonData = '''[
     "id": "12",
     "nombre": "isaac",
     "habilidades": {
-      "ataque": 55,
+      "ataque": 50,
       "defensa": 32,
       "salvada": 20,
       "servida": 19,
@@ -153,7 +153,7 @@ const jsonData = '''[
     "id": "13",
     "nombre": "JJ",
     "habilidades": {
-      "ataque": 29,
+      "ataque": 25,
       "defensa": 28,
       "salvada": 26,
       "servida": 38,
@@ -189,7 +189,7 @@ const jsonData = '''[
     "id": "16",
     "nombre": "julieta",
     "habilidades": {
-      "ataque": 10,
+      "ataque": 5,
       "defensa": 15,
       "salvada": 5,
       "servida": 10,
@@ -201,7 +201,7 @@ const jsonData = '''[
     "id": "17",
     "nombre": "margaret",
     "habilidades": {
-      "ataque": 20,
+      "ataque": 10,
       "defensa": 25,
       "salvada": 20,
       "servida": 20,
@@ -213,7 +213,7 @@ const jsonData = '''[
     "id": "18",
     "nombre": "matias",
     "habilidades": {
-      "ataque": 20,
+      "ataque": 15,
       "defensa": 30,
       "salvada": 24,
       "servida": 40,
@@ -249,7 +249,7 @@ const jsonData = '''[
     "id": "21",
     "nombre": "nirvana",
     "habilidades": {
-      "ataque": 43,
+      "ataque": 30,
       "defensa": 48,
       "salvada": 37,
       "servida": 55,
@@ -285,7 +285,7 @@ const jsonData = '''[
     "id": "24",
     "nombre": "piter",
     "habilidades": {
-      "ataque": 22,
+      "ataque": 10,
       "defensa": 25,
       "salvada": 22.5,
       "servida": 28,
@@ -297,12 +297,12 @@ const jsonData = '''[
     "id": "25",
     "nombre": "ronald",
     "habilidades": {
-      "ataque": 90,
-      "defensa": 90,
-      "salvada": 90,
+      "ataque": 80,
+      "defensa": 75,
+      "salvada": 75,
       "servida": 70,
-      "teamplay": 90,
-      "saque": 70
+      "teamplay": 60,
+      "saque": 60
     }
   },
   {
@@ -321,8 +321,8 @@ const jsonData = '''[
     "id": "27",
     "nombre": "ruben",
     "habilidades": {
-      "ataque": 40,
-      "defensa": 72.5,
+      "ataque": 30,
+      "defensa": 65.5,
       "salvada": 75,
       "servida": 45,
       "teamplay": 50,
@@ -345,10 +345,10 @@ const jsonData = '''[
     "id": "29",
     "nombre": "Andy",
     "habilidades": {
-      "ataque": 25,
-      "defensa": 50,
+      "ataque": 30,
+      "defensa": 52,
       "salvada": 45,
-      "servida": 60,
+      "servida": 70,
       "teamplay": 50,
       "saque": 35
     }
@@ -357,7 +357,7 @@ const jsonData = '''[
     "id": "30",
     "nombre": "Josue z",
     "habilidades": {
-      "ataque": 38,
+      "ataque": 30,
       "defensa": 45,
       "salvada": 40,
       "servida": 45,
@@ -369,7 +369,7 @@ const jsonData = '''[
     "id": "31",
     "nombre": "Juan Z",
     "habilidades": {
-      "ataque": 38,
+      "ataque": 30,
       "defensa": 45,
       "salvada": 40,
       "servida": 45,
@@ -382,5 +382,5 @@ const jsonData = '''[
 List<Jugador> fakeJugadores = List<Jugador>.from(
       json.decode(jsonData).map((x) => Jugador.fromMap(x)));
 
-String ab = "asdfasdf";
+
 
