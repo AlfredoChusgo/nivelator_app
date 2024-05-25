@@ -34,3 +34,23 @@ class EliminarJugadorEvent extends JugadoresEvent {
   @override
   List<Object?> get props => [id];
 }
+
+
+class RestoreDefaultValuesEvent extends JugadoresEvent {   
+  RestoreDefaultValuesEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class EmptyJugadoresEvent extends JugadoresEvent {   
+  EmptyJugadoresEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class PasteJugadoresFromClipboard extends JugadoresEvent {
+  String data;
+  PasteJugadoresFromClipboard({required this.data});
+  @override
+  List<Object?> get props => [data];
+}

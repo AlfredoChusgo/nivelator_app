@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -20,6 +21,9 @@ class JugadoresBloc extends Bloc<JugadoresEvent, JugadoresState> {
     on<CrearJugadorEvent>(_onCrearJugadorEvent);
     on<EditJugadorEvent>(_onEditJugadorEvent);
     on<EliminarJugadorEvent>(_onEliminarJugadorEvent);
+    on<RestoreDefaultValuesEvent>(_onRestoreDefaultValuesEvent);
+    on<EmptyJugadoresEvent>(_onEmptyJugadoresEvent);
+    on<PasteJugadoresFromClipboard>(_onPasteJugadoresFromClipboard);
   }
 
   FutureOr<void> _onLoadJugadoresEvent(LoadJugadoresEvent event, Emitter<JugadoresState> emit) async {
@@ -39,5 +43,41 @@ class JugadoresBloc extends Bloc<JugadoresEvent, JugadoresState> {
 
   FutureOr<void> _onCrearJugadorEvent(CrearJugadorEvent event, Emitter<JugadoresState> emit) async {
     await jugadoresRepository.createJugador(event.jugador);
+  }
+
+  FutureOr<void> _onRestoreDefaultValuesEvent(RestoreDefaultValuesEvent event, Emitter<JugadoresState> emit) async {
+    await jugadoresRepository.restoreDefaultValues();
+
+    emit(JugadoresLoadingState());
+    //var jugadores = await  JugadorDatabase.getJugadores();
+    var jugadores = await  jugadoresRepository.getJugadores();
+    emit(JugadoresLoadedState(jugadores: jugadores));
+  }
+
+  FutureOr<void> _onPasteJugadoresFromClipboard(PasteJugadoresFromClipboard event, Emitter<JugadoresState> emit) async {
+    await jugadoresRepository.emptyJuguadores();
+    try {
+      var jsonData = event.data;
+    
+    List<Jugador> jugadoresList = List<Jugador>.from(
+      json.decode(jsonData).map((x) => Jugador.fromMap(x)));
+      jugadoresRepository.createJugadores(jugadoresList);  
+    } catch (e) {
+      
+    }  
+
+    emit(JugadoresLoadingState());
+    //var jugadores = await  JugadorDatabase.getJugadores();
+    var jugadores = await  jugadoresRepository.getJugadores();
+    emit(JugadoresLoadedState(jugadores: jugadores));
+  }
+
+  FutureOr<void> _onEmptyJugadoresEvent(EmptyJugadoresEvent event, Emitter<JugadoresState> emit) async {
+    await jugadoresRepository.emptyJuguadores();
+
+    emit(JugadoresLoadingState());
+    //var jugadores = await  JugadorDatabase.getJugadores();
+    var jugadores = await  jugadoresRepository.getJugadores();
+    emit(JugadoresLoadedState(jugadores: jugadores));
   }
 }

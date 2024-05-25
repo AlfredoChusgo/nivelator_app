@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/ui/pages/nivelator_page_results.dart';
 import 'package:nivelador_app/ui/pages/configuration_page.dart';
@@ -17,21 +18,46 @@ class JugadoresListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.navigate_next),
-        //     onPressed: () {
-        //       //Navigate to the NewScreen when the button is pressed
-        //       //context.read<NivelatorBloc>().add(NivelateEvent());
-        //       Navigator.of(context).push(
-        //         MaterialPageRoute(
-        //           //builder: (context) => NivelatorPage(),
-        //           builder: (context) => ConfigurationPage(),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              //Navigate to the NewScreen when the button is pressed
+              context.read<JugadoresBloc>().add(EmptyJugadoresEvent());
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.restore),
+            onPressed: () {
+              //Navigate to the NewScreen when the button is pressed
+              context.read<JugadoresBloc>().add(RestoreDefaultValuesEvent());
+            },
+          ),
+          BlocBuilder<JugadoresBloc, JugadoresState>(
+            builder: (context, state) {
+              return IconButton(
+                icon: Icon(Icons.copy),
+                onPressed: () {
+                  if(state is JugadoresLoadedState){
+                    Clipboard.setData(
+                        ClipboardData(text: Jugador.getJsonFromJugadores(state.jugadores)));
+                  }
+                  
+                },
+              );
+            }
+          ),
+          IconButton(
+            icon: Icon(Icons.paste),
+            onPressed: () async {
+              //Navigate to the NewScreen when the button is pressed
+              ClipboardData? clipboardData = await Clipboard.getData("text/plain");
+
+              String data = clipboardData?.text ?? "";
+              context.read<JugadoresBloc>().add(PasteJugadoresFromClipboard(data: data ));
+            },
+          ),
+        ],
         title: Text('Lista de Jugadores'),
       ),
       body: BlocBuilder<JugadoresBloc, JugadoresState>(
@@ -98,73 +124,75 @@ class CrearJugadorScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Form(
-          // Aquí puedes crear un formulario para ingresar datos del jugador
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Nombre'),
-                controller: nombreController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Ataque'),
-                keyboardType: TextInputType.number,
-                controller: ataqueController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Defensa'),
-                keyboardType: TextInputType.number,
-                controller: defensaController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Salvada'),
-                keyboardType: TextInputType.number,
-                controller: salvadaController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'servida'),
-                keyboardType: TextInputType.number,
-                controller: servidaController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Teamplay'),
-                keyboardType: TextInputType.number,
-                controller: teamplayController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Saque'),
-                keyboardType: TextInputType.number,
-                controller: saqueController,
-              ),
-
-              
-
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Guardar el jugador en la base de datos y volver a la lista de jugadores
-                  // Puedes implementar esta lógica
-
-                  jugadoresBloc.add(CrearJugadorEvent(
-                      jugador: Jugador(
-                          id: Uuid().v4(),
-                          nombre: nombreController.text,
-                          habilidades: JugadorHabilidades(
-                            ataque: int.parse(ataqueController.text),
-                          defensa: int.parse(defensaController.text),
-                          salvada: int.parse(salvadaController.text),
-                          servida: int.parse(servidaController.text),
-                          teamplay: int.parse(teamplayController.text),
-                          saque: int.parse(saqueController.text),
-                          )
-                          )));
-                  jugadoresBloc.add(LoadJugadoresEvent());
-                  Navigator.pop(context);
-                },
-                child: Text('Guardar'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Form(
+            // Aquí puedes crear un formulario para ingresar datos del jugador
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Nombre'),
+                  controller: nombreController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Ataque'),
+                  keyboardType: TextInputType.number,
+                  controller: ataqueController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Defensa'),
+                  keyboardType: TextInputType.number,
+                  controller: defensaController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Salvada'),
+                  keyboardType: TextInputType.number,
+                  controller: salvadaController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'servida'),
+                  keyboardType: TextInputType.number,
+                  controller: servidaController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Teamplay'),
+                  keyboardType: TextInputType.number,
+                  controller: teamplayController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Saque'),
+                  keyboardType: TextInputType.number,
+                  controller: saqueController,
+                ),
+          
+                
+          
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // Guardar el jugador en la base de datos y volver a la lista de jugadores
+                    // Puedes implementar esta lógica
+          
+                    jugadoresBloc.add(CrearJugadorEvent(
+                        jugador: Jugador(
+                            id: Uuid().v4(),
+                            nombre: nombreController.text,
+                            habilidades: JugadorHabilidades(
+                              ataque: int.parse(ataqueController.text),
+                            defensa: int.parse(defensaController.text),
+                            salvada: int.parse(salvadaController.text),
+                            servida: int.parse(servidaController.text),
+                            teamplay: int.parse(teamplayController.text),
+                            saque: int.parse(saqueController.text),
+                            )
+                            )));
+                    jugadoresBloc.add(LoadJugadoresEvent());
+                    Navigator.pop(context);
+                  },
+                  child: Text('Guardar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -201,82 +229,84 @@ class EditarJugadorScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Form(
-          // Aquí puedes crear un formulario para editar los datos del jugador
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                //initialValue: jugador.nombre,
-                decoration: InputDecoration(labelText: 'Nombre'),
-                controller: nombreController,
-              ),
-              TextFormField(
-                //initialValue: jugador.ataque.toString(),
-                decoration: InputDecoration(labelText: 'Ataque'),
-                keyboardType: TextInputType.number,
-                controller: ataqueController,
-              ),
-              TextFormField(
-                //initialValue: jugador.defensa.toString(),
-                decoration: InputDecoration(labelText: 'Defensa'),
-                keyboardType: TextInputType.number,
-                controller: defensaController,
-              ),
-                            TextFormField(
-                decoration: InputDecoration(labelText: 'Salvada'),
-                keyboardType: TextInputType.number,
-                controller: salvadaController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'servida'),
-                keyboardType: TextInputType.number,
-                controller: servidaController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Teamplay'),
-                keyboardType: TextInputType.number,
-                controller: teamplayController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Saque'),
-                keyboardType: TextInputType.number,
-                controller: saqueController,
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Actualizar los datos del jugador en la base de datos y volver a la lista de jugadores
-                  // Puedes implementar esta lógica
-                  context.read<JugadoresBloc>().add(EditJugadorEvent(
-                      jugador: Jugador(
-                          id: jugador.id,
-                          nombre: nombreController.text,
-                          habilidades: JugadorHabilidades(
-                            ataque: int.parse(ataqueController.text),
-                            defensa: int.parse(defensaController.text),
-                            salvada: int.parse(salvadaController.text),
-                            servida: int.parse(servidaController.text),
-                            teamplay: int.parse(teamplayController.text),
-                            saque: int.parse(saqueController.text),
-                          ))));
-                  context.read<JugadoresBloc>().add(LoadJugadoresEvent());
-                  Navigator.pop(context);
-                },
-                child: Text('Actualizar'),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Eliminar al jugador de la base de datos y volver a la lista de jugadores
-                  // Puedes implementar esta lógica
-                  context.read<JugadoresBloc>().add(EliminarJugadorEvent(id: jugador.id));
-                  context.read<JugadoresBloc>().add(LoadJugadoresEvent());
-                  Navigator.pop(context);
-                },
-                child: Text('Eliminar'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Form(
+            // Aquí puedes crear un formulario para editar los datos del jugador
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  //initialValue: jugador.nombre,
+                  decoration: InputDecoration(labelText: 'Nombre'),
+                  controller: nombreController,
+                ),
+                TextFormField(
+                  //initialValue: jugador.ataque.toString(),
+                  decoration: InputDecoration(labelText: 'Ataque'),
+                  keyboardType: TextInputType.number,
+                  controller: ataqueController,
+                ),
+                TextFormField(
+                  //initialValue: jugador.defensa.toString(),
+                  decoration: InputDecoration(labelText: 'Defensa'),
+                  keyboardType: TextInputType.number,
+                  controller: defensaController,
+                ),
+                              TextFormField(
+                  decoration: InputDecoration(labelText: 'Salvada'),
+                  keyboardType: TextInputType.number,
+                  controller: salvadaController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'servida'),
+                  keyboardType: TextInputType.number,
+                  controller: servidaController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Teamplay'),
+                  keyboardType: TextInputType.number,
+                  controller: teamplayController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Saque'),
+                  keyboardType: TextInputType.number,
+                  controller: saqueController,
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // Actualizar los datos del jugador en la base de datos y volver a la lista de jugadores
+                    // Puedes implementar esta lógica
+                    context.read<JugadoresBloc>().add(EditJugadorEvent(
+                        jugador: Jugador(
+                            id: jugador.id,
+                            nombre: nombreController.text,
+                            habilidades: JugadorHabilidades(
+                              ataque: int.parse(ataqueController.text),
+                              defensa: int.parse(defensaController.text),
+                              salvada: int.parse(salvadaController.text),
+                              servida: int.parse(servidaController.text),
+                              teamplay: int.parse(teamplayController.text),
+                              saque: int.parse(saqueController.text),
+                            ))));
+                    context.read<JugadoresBloc>().add(LoadJugadoresEvent());
+                    Navigator.pop(context);
+                  },
+                  child: Text('Actualizar'),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // Eliminar al jugador de la base de datos y volver a la lista de jugadores
+                    // Puedes implementar esta lógica
+                    context.read<JugadoresBloc>().add(EliminarJugadorEvent(id: jugador.id));
+                    context.read<JugadoresBloc>().add(LoadJugadoresEvent());
+                    Navigator.pop(context);
+                  },
+                  child: Text('Eliminar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

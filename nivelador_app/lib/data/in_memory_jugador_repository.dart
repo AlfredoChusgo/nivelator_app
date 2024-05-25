@@ -37,6 +37,26 @@ class InMemoryJugadorRepository extends IJugadorRepository{
       throw Exception('Jugador with id $id not found');
     }
   }
+  
+  @override
+  Future<void> restoreDefaultValues() {
+    // TODO: implement restoreDefaultValues
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> emptyJuguadores() {
+    // TODO: implement emptyJuguadores
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> createJugadores(List<Jugador> jugadores) {
+    // TODO: implement createJugadores
+    throw UnimplementedError();
+  }
+  
+
 
 
 }

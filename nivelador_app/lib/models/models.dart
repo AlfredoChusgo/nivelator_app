@@ -59,6 +59,21 @@ factory Jugador.fromJson(String json) {
     );
   }
 
+  static Jugador fromSQLiteTable(Map<String, dynamic> map) {
+    return Jugador(
+      id: map['id'] as String,
+      nombre: map['nombre'] as String,
+      habilidades: JugadorHabilidades(
+        ataque: map['ataque'] as num,
+        defensa: map['defensa'] as num,
+        salvada: map['salvada'] as num,
+        servida: map['servida'] as num,
+        teamplay: map['teamplay'] as num,
+        saque: map['saque'] as num,
+      ),
+    );
+  }
+
   // Method to convert Jugador instance to a Map
   Map<String, dynamic> toMap() {
     return {
@@ -75,6 +90,19 @@ factory Jugador.fromJson(String json) {
     };
   }
 
+
+  Map<String, dynamic> toSqliteTable() {
+    return {
+      'id': id,
+      'nombre': nombre,
+      'ataque': habilidades.ataque,
+      'defensa': habilidades.defensa,
+      'salvada': habilidades.salvada,
+      'servida': habilidades.servida,
+      'teamplay': habilidades.teamplay,
+      'saque': habilidades.saque,
+    };
+  }
   @override
   String toString() {
     return 'Jugador{id: $id, nombre: $nombre, ataque: ${habilidades.ataque}, defensa: ${habilidades.defensa}, salvada: ${habilidades.salvada}, servida: ${habilidades.servida}, teamplay: ${habilidades.teamplay}, saque: ${habilidades.saque}}';
@@ -142,6 +170,13 @@ factory Jugador.fromJson(String json) {
     }
 
     return pesos;
+  }
+
+  static String getJsonFromJugadores(List<Jugador> jugadores){
+    List<Map<String, dynamic>> jugadoresMap = jugadores.map((jugador) => jugador.toMap()).toList();
+    String jsonString = jsonEncode(jugadoresMap);
+
+    return jsonString;
   }
 }
 
@@ -242,6 +277,15 @@ class ListaEquipoBalanceado {
   }
 
 }
+
+class ListaJugadores {
+  String id;
+  String nombre;
+  List<Jugador> jugadores;
+
+  ListaJugadores({required this.id, required this.nombre, required this.jugadores});
+  
+  }
 
 enum ScoreWeightConfiguration { none, simple, advance, custom }
 enum IterationCategory {
