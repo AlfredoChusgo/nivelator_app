@@ -44,7 +44,7 @@ class ListaEquipoBalanceadoHome extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ListaEquipoBalanceadoWidget(teams: lista.equipos),
+                              ListaEquipoBalanceadoWidget(teams: List<List<Team>>.of([lista.equipos])),
                         ),
                       );
                     },

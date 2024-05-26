@@ -20,7 +20,7 @@ class NivelatorLoadingState extends NivelatorState {
 }
 
 class NivelatorLoadedState extends NivelatorState {
-  List<Team> results;
+  List<List<Team>> results;
   NivelateEvent nivelateEvent;
   NivelatorLoadedState({required this.results , required this.nivelateEvent});
 

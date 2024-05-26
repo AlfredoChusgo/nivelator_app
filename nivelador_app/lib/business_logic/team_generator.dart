@@ -1,17 +1,20 @@
 import 'dart:math';
 
 import 'package:faker/faker.dart';
+import 'package:nivelador_app/business_logic/fixed_queue.dart';
 
 import '../models/models.dart';
 
 class TeamGenerator {
   bool _cancelRequested = false;
 
-  Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
+  // Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
+  Future<List<List<Team>>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
       ScoreWeightConfiguration configuration,{required Function(double,String) onProgress}) async {
     _cancelRequested = false;
             
-    List<Team> bestTeams = List.empty(growable: true);
+    // List<Team> bestTeams = List.empty(growable: true);
+    FixedQueue<List<Team>> bestTeams = FixedQueue(4);
     num bestDifference = 2147483647;
     int iterations = cantidadIteraciones;
 
@@ -43,7 +46,8 @@ class TeamGenerator {
       // Update best teams if current teams have a smaller difference
       if (difference < bestDifference) {
         bestDifference = difference;
-        bestTeams = List.from(currentTeams);
+        // bestTeams = List.from(currentTeams);
+        bestTeams.push(List.from(currentTeams));
       }
 
       if (i % 100 == 0) {
@@ -53,7 +57,7 @@ class TeamGenerator {
       }
     }
 
-    return bestTeams;
+    return bestTeams.toList();
   }
 
   String logTeamsInfo(List<Team> teams){
@@ -93,39 +97,39 @@ class TeamGenerator {
   }
 }
 
-void main() async{
-  final faker = Faker();
-  int count = 20;
-  List<Jugador> jugadores = List.empty(growable: true);
-  for (int i = 0; i < count; i++) {
-    final jugador = Jugador(
-      id: faker.guid.guid(),
-      //ci: faker.random.alphaNumeric(8),
-      nombre: faker.person.firstName(),
-      habilidades: JugadorHabilidades(
-          ataque: faker.randomGenerator.integer(100, min: 0),
-          defensa: faker.randomGenerator.integer(100, min: 0),
-          salvada: faker.randomGenerator.integer(100, min: 0),
-          servida: faker.randomGenerator.integer(100, min: 0),
-          teamplay: faker.randomGenerator.integer(100, min: 0),
-          saque: faker.randomGenerator.integer(100, min: 0)),
+// void main() async{
+//   final faker = Faker();
+//   int count = 20;
+//   List<Jugador> jugadores = List.empty(growable: true);
+//   for (int i = 0; i < count; i++) {
+//     final jugador = Jugador(
+//       id: faker.guid.guid(),
+//       //ci: faker.random.alphaNumeric(8),
+//       nombre: faker.person.firstName(),
+//       habilidades: JugadorHabilidades(
+//           ataque: faker.randomGenerator.integer(100, min: 0),
+//           defensa: faker.randomGenerator.integer(100, min: 0),
+//           salvada: faker.randomGenerator.integer(100, min: 0),
+//           servida: faker.randomGenerator.integer(100, min: 0),
+//           teamplay: faker.randomGenerator.integer(100, min: 0),
+//           saque: faker.randomGenerator.integer(100, min: 0)),
       
-    );
-    jugadores.add(jugador);
-  }
+//     );
+//     jugadores.add(jugador);
+//   }
 
-  int numTeams = 5;
-  List<Team> teams = await TeamGenerator()
-      .monteCarloBalance(jugadores, numTeams, 10000000,ScoreWeightConfiguration.simple,onProgress: (p0,data) {},);
+//   int numTeams = 5;
+//   List<Team> teams = await TeamGenerator()
+//       .monteCarloBalance(jugadores, numTeams, 10000000,ScoreWeightConfiguration.simple,onProgress: (p0,data) {},);
 
-  // Print teams and their total scores
-  for (int i = 0; i < teams.length; i++) {
-    print("Team ${i + 1}:");
-    teams[i].players.forEach((player) {
-      //print("${player.nombre} - Defense: ${player.defense}, Attack: ${player.attack}");
-      print(player.toString());
-    });
-    //print("Total Defense: ${teams[i].totalDefense}, Total Attack: ${teams[i].totalAttack}, Total Score: ${teams[i].getTotalScore(defenseWeight: 2, attackWeight: 1)}\n");
-    print("Total score : ${teams[i].getTotalScore()}");
-  }
-}
+//   // Print teams and their total scores
+//   for (int i = 0; i < teams.length; i++) {
+//     print("Team ${i + 1}:");
+//     teams[i].players.forEach((player) {
+//       //print("${player.nombre} - Defense: ${player.defense}, Attack: ${player.attack}");
+//       print(player.toString());
+//     });
+//     //print("Total Defense: ${teams[i].totalDefense}, Total Attack: ${teams[i].totalAttack}, Total Score: ${teams[i].getTotalScore(defenseWeight: 2, attackWeight: 1)}\n");
+//     print("Total score : ${teams[i].getTotalScore()}");
+//   }
+// }

@@ -67,20 +67,21 @@ class DatabaseHelper {
       CREATE TABLE IF NOT EXISTS listas (
         id TEXT PRIMARY KEY,
         nombre TEXT,
-        dateTime TEXT,        
-      )
+        dateTime TEXT
+        )
+    
     ''');
 
 
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS lista_jugadores (
-        id TEXT PRIMARY KEY,
-        nombre TEXT,
-        dateTime TEXT,
-        FOREIGN KEY (lista_id) REFERENCES listas (id),
-        FOREIGN KEY (jugador_id) REFERENCES jugadores (id)
-      )
-    ''');
+    // await db.execute('''
+    //   CREATE TABLE IF NOT EXISTS lista_jugadores (
+    //     id TEXT PRIMARY KEY,
+    //     nombre TEXT,
+    //     dateTime TEXT,
+    //     FOREIGN KEY (lista_id) REFERENCES listas (id),
+    //     FOREIGN KEY (jugador_id) REFERENCES jugadores (id)
+    //   )
+    // ''');
   }
 
   Future<void> createJugador(Jugador jugador) async {

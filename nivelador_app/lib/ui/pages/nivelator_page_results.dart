@@ -8,7 +8,7 @@ import '../../main2.dart';
 import '../../models/models.dart';
 
 class NivelatorPageResults extends StatelessWidget {
-  late List<Team> teams;
+  late List<List<Team>> teams;
   late NivelateEvent nivelateEvent;
   NivelatorPageResults({required this.teams, required this.nivelateEvent}) {}
 
@@ -19,12 +19,12 @@ class NivelatorPageResults extends StatelessWidget {
 }
 
 class ListaEquipoBalanceadoWidget extends StatelessWidget {
-  late List<Team> teams;
+  late List<List<Team>> teams;
   ListaEquipoBalanceadoWidget({required this.teams});
   @override
   Widget build(BuildContext context) {
-    var teamsGroupCards = teams.map((e) {
-      int index = teams.indexOf(e);
+    var teamsGroupCards = teams[0].map((e) {
+      int index = teams[0].indexOf(e);
       return TeamGroupCard(
         groupName: 'Equipo $index',
         team: e,
@@ -46,7 +46,7 @@ class ListaEquipoBalanceadoWidget extends StatelessWidget {
                 if (result != null) {
                   context.read<NivelatorBloc>().add(
                       SaveEquiposBalanceadosEvent(
-                          nombreLista: result['nombre'], teams: teams));
+                          nombreLista: result['nombre'], teams: teams[0]));
                   //Navigator.of(context).pop(context);
                   //Navigator.pop(context);
                 } else {

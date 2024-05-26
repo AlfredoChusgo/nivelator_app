@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:nivelador_app/business_logic/fixed_queue.dart';
 import 'package:nivelador_app/business_logic/team_generator.dart';
 import 'package:nivelador_app/jugador_database.dart';
 import 'package:uuid/uuid.dart';
@@ -34,7 +35,7 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
     //     jugadores: jugadores, cantidadGrupos: event.cantidadEquipos, jugadoresPorGrupo: event.jugadoresPorEquipo);
     // List<List<Jugador>> grupos = divisor.dividirJugadores();
     emit(NivelatorLoadingState(progress: 0,statusUpdate: ""));
-    List<Team> equipos = await teamGenerator.monteCarloBalance(
+    List<List<Team>> equipos = await teamGenerator.monteCarloBalance(
         jugadores,
         event.cantidadEquipos,
         event.cantidadIteraciones,

@@ -225,18 +225,23 @@ class Team {
   }
 
   
-  static String toWhatsappMessage(List<Team> teams){
+  static String toWhatsappMessage(List<List<Team>> teams){
     String result = "";
 
-    for (var i = 0; i < teams.length; i++) {
-      result+="``` \n Equipo $i```";
-      teams[i].players.forEach((element) {
-        result+="\n";
-        result+="* ${element.nombre}";
-       });
+    for (var j = 0; j < teams.length; j++) {
+      result += "``` \n Opcion [$j]```";
+      for (var i = 0; i < teams.length; i++) {
+        result += "``` \n Equipo $i```";
+        teams[j][i].players.forEach((element) {
+          result += "\n";
+          result += "* ${element.nombre}";
+        });
 
-      result+=" \n ----------------------";
+        result += " \n ----------------------";
+      }
+      result += " \n [][][][][][][]";      
     }
+
 
     return result;
   }
