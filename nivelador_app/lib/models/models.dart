@@ -363,6 +363,10 @@ class HabilidadesPeso {
     return HabilidadesPeso(ataque: 1, defensa: 1, salvada: 1, servida: 1, teamplay: 1, saque: 1);
   }
 
+    factory HabilidadesPeso.defaultHabilidadesPeso(){
+    return HabilidadesPeso(ataque: 0.9, defensa: 0.6, salvada: 0.5, servida: 0.7, teamplay: 0.15, saque: 0.15);
+  }
+
   factory HabilidadesPeso.fromJson(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
     return HabilidadesPeso(
@@ -399,7 +403,7 @@ class Settings {
   }
 
   factory Settings.defaultSettings(){
-    return Settings(habilidadesPeso: HabilidadesPeso(ataque: 1, defensa: 1, salvada: 1, servida: 1, teamplay: 1, saque: 1));
+    return Settings(habilidadesPeso: HabilidadesPeso.defaultHabilidadesPeso());
   }
 }
 
