@@ -5,7 +5,6 @@ import 'package:nivelador_app/data/jugador_repository_interface.dart';
 import 'package:nivelador_app/data/list_equipo_repository_interface.dart';
 import 'package:nivelador_app/data/settings_repository_interface.dart';
 import 'package:nivelador_app/models/models.dart';
-import 'fake_data/fake_jugadores.dart';
 
 class SQLiteSettingsRepository implements ISettingsRepository {
   final DatabaseHelper _databaseHelper = DatabaseHelper();

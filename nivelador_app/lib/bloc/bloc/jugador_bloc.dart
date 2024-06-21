@@ -6,8 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:nivelador_app/data/jugador_repository_interface.dart';
 
-import '../../jugador_database.dart';
-import '../../main2.dart';
 import '../../models/models.dart';
 
 part 'jugador_event.dart';

@@ -130,7 +130,7 @@ class DatabaseHelper {
   Future<Settings> getSettings() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('settings');
-    HabilidadesPeso habilidadesPeso = HabilidadesPeso.maximumWeight();
+    HabilidadesPeso habilidadesPeso = HabilidadesPeso(ataque: 0.9, defensa: 0.6, salvada: 0.5, servida: 0.7, teamplay: 0.15, saque: 0.15);                  
 
     for (Map<String, dynamic> map in maps) {
       if(map['key'].toString() == "HabilidadesPeso"){

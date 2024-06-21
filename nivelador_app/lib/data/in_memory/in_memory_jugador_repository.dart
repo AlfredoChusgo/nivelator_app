@@ -1,7 +1,7 @@
+import 'package:nivelador_app/data/fake_data/fake_jugadores.dart';
 import 'package:nivelador_app/data/jugador_repository_interface.dart';
 import 'package:nivelador_app/models/models.dart';
 
-import 'fake_data/fake_jugadores.dart';
 
 class InMemoryJugadorRepository extends IJugadorRepository{
   static List<Jugador> _jugadores = [];

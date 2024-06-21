@@ -1,6 +1,6 @@
 import 'package:nivelador_app/data/list_equipo_repository_interface.dart';
+import 'package:nivelador_app/models/models.dart';
 
-import '../models/models.dart';
 
 class InMemoryListaEquipoRepository extends IListaEquipoRepository {
   static List<ListaEquipoBalanceado> _listasEquipoBalanceados = [];

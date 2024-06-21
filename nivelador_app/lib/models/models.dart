@@ -397,6 +397,10 @@ class Settings {
       habilidadesPeso: HabilidadesPeso.fromJson(jsonString),
     );
   }
+
+  factory Settings.defaultSettings(){
+    return Settings(habilidadesPeso: HabilidadesPeso(ataque: 1, defensa: 1, salvada: 1, servida: 1, teamplay: 1, saque: 1));
+  }
 }
 
 // class ScoreWeight {
