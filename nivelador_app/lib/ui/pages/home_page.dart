@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/ui/pages/production_app.dart';
+import 'package:nivelador_app/ui/pages/settings_page.dart';
 
-import 'configuration_page.dart';
+import 'nivelar_equipos_page.dart';
 import 'jugadores_list_page.dart';
 import 'list_equipo_balanceado_home.dart';
 
@@ -58,6 +59,10 @@ class _NavigationExampleState extends State<NavigationExample> {
           NavigationDestination(
             icon: Icon(Icons.list),
             label: 'Nivelar',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Opciones',
           )
         ],
       ),
@@ -74,7 +79,11 @@ class _NavigationExampleState extends State<NavigationExample> {
         Container(
             color: Colors.green,
             alignment: Alignment.center,
-            child: ConfigurationPage()),
+            child: NivelarEquiposPage()),
+        Container(
+            color: Colors.green,
+            alignment: Alignment.center,
+            child: EditarSettingsPage()),
         //child: const EstadiaPacienteHomePage()),
       ][currentPageIndex],
     );

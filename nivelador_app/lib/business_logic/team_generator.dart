@@ -10,7 +10,7 @@ class TeamGenerator {
 
   // Future<List<Team>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
   Future<List<List<Team>>> monteCarloBalance(List<Jugador> players, int numTeams,int cantidadIteraciones ,
-      ScoreWeightConfiguration configuration,{required Function(double,String) onProgress}) async {
+      HabilidadesPeso pesos,{required Function(double,String) onProgress}) async {
     _cancelRequested = false;
             
     // List<Team> bestTeams = List.empty(growable: true);
@@ -23,7 +23,7 @@ class TeamGenerator {
 
 
       List<Team> currentTeams = List.generate(
-          numTeams, (_) => Team(players: [], configuration: configuration));
+          numTeams, (_) => Team(players: [], pesos: pesos));
 
       // Shuffle players randomly
       List<Jugador> shuffledPlayers = List.from(players);

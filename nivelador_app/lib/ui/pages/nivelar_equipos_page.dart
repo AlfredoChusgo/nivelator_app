@@ -8,7 +8,7 @@ import '../../models/models.dart';
 import 'nivelator_page_home.dart';
 import 'nivelator_page_results.dart';
 
-class ConfigurationPage extends StatelessWidget {
+class NivelarEquiposPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

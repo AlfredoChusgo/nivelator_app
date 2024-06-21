@@ -23,7 +23,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'your_database.db');
+    String path = join(await getDatabasesPath(), 'your_database.db');//todo update this
     return await openDatabase(
       path,
       version: 1,
@@ -72,7 +72,12 @@ class DatabaseHelper {
     
     ''');
 
-
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT,
+        value TEXT
+      )
+    ''');
     // await db.execute('''
     //   CREATE TABLE IF NOT EXISTS lista_jugadores (
     //     id TEXT PRIMARY KEY,
@@ -121,6 +126,43 @@ class DatabaseHelper {
     final db = await database;
     await db.execute("DELETE FROM Jugadores");
   }
+
+  Future<Settings> getSettings() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('settings');
+    HabilidadesPeso habilidadesPeso = HabilidadesPeso.maximumWeight();
+
+    for (Map<String, dynamic> map in maps) {
+      if(map['key'].toString() == "HabilidadesPeso"){
+        habilidadesPeso = HabilidadesPeso.fromJson(map['value']);
+      }
+    }
+    if(maps.isEmpty){
+      await createSettings(Settings(habilidadesPeso: habilidadesPeso));
+    }
+
+    return Settings(habilidadesPeso: habilidadesPeso);    
+  }
+
+
+  Future<void> createSettings(Settings settings) async {
+    final db = await database;
+    await db.insert('settings', { "key":"HabilidadesPeso","value":settings.habilidadesPeso.toJson()});
+  }
+
+
+  Future<void> updateSettings(Settings settings) async {
+    final db = await database;
+    await db.update(
+      'settings',
+      {
+        "value" : settings.habilidadesPeso.toJson()
+      },
+      where: "key = ?",
+      whereArgs: ["HabilidadesPeso"],
+    );
+  }
+
 
 
   //   Future<void> createListaJugadores(ListaJugadores lista) async {

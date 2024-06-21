@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:nivelador_app/business_logic/fixed_queue.dart';
 import 'package:nivelador_app/business_logic/team_generator.dart';
+import 'package:nivelador_app/data/settings_repository_interface.dart';
 import 'package:nivelador_app/jugador_database.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,8 +18,9 @@ part 'nivelator_state.dart';
 
 class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
   late IListaEquipoRepository listaEquipoBalancecadoRepository;
+  late ISettingsRepository settingsRepository;
   late TeamGenerator teamGenerator;
-  NivelatorBloc({required this.listaEquipoBalancecadoRepository})
+  NivelatorBloc({required this.listaEquipoBalancecadoRepository, required this.settingsRepository})
       : super(NivelatorInitialState()) {
 
     teamGenerator = TeamGenerator();
@@ -39,7 +41,7 @@ class NivelatorBloc extends Bloc<NivelatorEvent, NivelatorState> {
         jugadores,
         event.cantidadEquipos,
         event.cantidadIteraciones,
-        ScoreWeightConfiguration.simple,onProgress: (p0,statusUpdate) => emit(NivelatorLoadingState(progress: p0,statusUpdate: statusUpdate)));
+        (await settingsRepository.getSettings()).habilidadesPeso,onProgress: (p0,statusUpdate) => emit(NivelatorLoadingState(progress: p0,statusUpdate: statusUpdate)));
     
     emit(NivelatorLoadedState(results: equipos, nivelateEvent: event));
   }

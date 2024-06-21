@@ -107,12 +107,12 @@ factory Jugador.fromJson(String json) {
   String toString() {
     return 'Jugador{id: $id, nombre: $nombre, ataque: ${habilidades.ataque}, defensa: ${habilidades.defensa}, salvada: ${habilidades.salvada}, servida: ${habilidades.servida}, teamplay: ${habilidades.teamplay}, saque: ${habilidades.saque}}';
   }
-  String getNameAndScore(ScoreWeightConfiguration configuration){
-    return "$nombre -- score : ${getScore(configuration)}";
+  String getNameAndScore(HabilidadesPeso pesos){
+    return "$nombre -- score : ${getScore(pesos)}";
   }
 
-  num getScore(ScoreWeightConfiguration configuration) {
-    HabilidadesPeso pesos = getHabilidadPeso(configuration);
+  num getScore(HabilidadesPeso pesos) {
+    //HabilidadesPeso pesos = getHabilidadPeso(configuration);
     num result = 0;
 
     result += (pesos.ataque * habilidades.ataque) +
@@ -158,12 +158,12 @@ factory Jugador.fromJson(String json) {
 
         break;
         case ScoreWeightConfiguration.custom:
-        pesos.ataque = 0.8;//
-        pesos.defensa = 0.5;//
-        pesos.salvada = 0.30;
-        pesos.servida = 0.7;//
-        pesos.teamplay = 0.3;
-        pesos.saque = 0.1;
+        pesos.ataque = 0.9;//
+        pesos.defensa = 0.45;//
+        pesos.salvada = 0.20;
+        pesos.servida = 0.30;//
+        pesos.teamplay = 0.1;
+        pesos.saque = 0.05;
 
         break;
       default:
@@ -182,27 +182,28 @@ factory Jugador.fromJson(String json) {
 
 class Team {
   List<Jugador> players;
-  ScoreWeightConfiguration configuration;
-  Team({required this.players, required this.configuration});
+  //ScoreWeightConfiguration configuration;
+  HabilidadesPeso pesos;
+  Team({required this.players, required this.pesos});
 
   factory Team.Empty() {
-    return Team(players: [],configuration: ScoreWeightConfiguration.none);
+    return Team(players: [],pesos: HabilidadesPeso.maximumWeight());
   }
 
   //num getTotalScore({num ataqueWeight = 1, num defensaWeight = 1, num salvadaWeight = 1, num servidaWeight = 1, num teamplayWeight = 1, num saqueWeight = 1}) {
   num getTotalScore(){
-    return _getTotalScore(configuration);
+    return _getTotalScore(pesos);
   }
 
-  num getTotalScoreWithCustomConfiguration(ScoreWeightConfiguration configuration){
-    return _getTotalScore(configuration);
+  num getTotalScoreWithCustomConfiguration(HabilidadesPeso pesos){
+    return _getTotalScore(pesos);
   }
-  num _getTotalScore(ScoreWeightConfiguration configuration) {
+  num _getTotalScore(HabilidadesPeso pesos) {
 
     num total = 0;
 
     for (Jugador jugador in players) {
-      total += jugador.getScore(configuration);
+      total += jugador.getScore(pesos);
     }
     return total;
   }
@@ -210,7 +211,7 @@ class Team {
   Map<String, dynamic> toMap() {
     return {
       'players': players.map((jugador) => jugador.toMap()).toList(),
-      'configuration': configuration.toString(),
+      'pesos': pesos.toString(),
     };
   }
 
@@ -219,8 +220,9 @@ class Team {
     return Team(
       players: List<Jugador>.from(
           map['players'].map((item) => Jugador.fromMap(item))),
-      configuration: ScoreWeightConfiguration.values
-          .firstWhere((e) => e.toString() == map['configuration']),
+      // configuration: ScoreWeightConfiguration.values
+      //     .firstWhere((e) => e.toString() == map['configuration']),
+      pesos : HabilidadesPeso.maximumWeight()
     );
   }
 
@@ -360,7 +362,43 @@ class HabilidadesPeso {
   factory HabilidadesPeso.maximumWeight(){
     return HabilidadesPeso(ataque: 1, defensa: 1, salvada: 1, servida: 1, teamplay: 1, saque: 1);
   }
+
+  factory HabilidadesPeso.fromJson(String jsonString) {
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return HabilidadesPeso(
+      ataque: jsonMap['ataque'],
+      defensa: jsonMap['defensa'],
+      salvada: jsonMap['salvada'],
+      servida: jsonMap['servida'],
+      teamplay: jsonMap['teamplay'],
+      saque: jsonMap['saque'],
+    );
+  }
+
+  String toJson() {
+    return jsonEncode({
+      'ataque': ataque,
+      'defensa': defensa,
+      'salvada': salvada,
+      'servida': servida,
+      'teamplay': teamplay,
+      'saque': saque,
+    });
+  }
 }
+
+class Settings {
+  HabilidadesPeso habilidadesPeso;
+
+  Settings({required this.habilidadesPeso});
+
+  static Settings fromSQLiteTable(String jsonString) {
+    return Settings( 
+      habilidadesPeso: HabilidadesPeso.fromJson(jsonString),
+    );
+  }
+}
+
 // class ScoreWeight {
 //   late num ataqueWeight;
 //   late num defensaWeight;

@@ -98,7 +98,7 @@ class TeamGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var tiles = team.players.map((jugador) => ListTile(
         title: Text(
-            '${jugador.nombre} - Score : ${jugador.getScore(team.configuration).round()}'),
+            '${jugador.nombre} - Score : ${jugador.getScore(team.pesos).round()}'),
         subtitle: Text(jugador.habilidades.toString())));
     return Card(
       margin: EdgeInsets.all(16.0),

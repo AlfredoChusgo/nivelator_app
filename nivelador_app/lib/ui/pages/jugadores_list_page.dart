@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nivelador_app/ui/pages/nivelator_page_results.dart';
-import 'package:nivelador_app/ui/pages/configuration_page.dart';
+import 'package:nivelador_app/ui/pages/nivelar_equipos_page.dart';
 import 'package:nivelador_app/ui/pages/home_page.dart';
 import 'package:uuid/uuid.dart';
 
@@ -178,12 +178,12 @@ class CrearJugadorScreen extends StatelessWidget {
                             id: Uuid().v4(),
                             nombre: nombreController.text,
                             habilidades: JugadorHabilidades(
-                              ataque: int.parse(ataqueController.text),
-                            defensa: int.parse(defensaController.text),
-                            salvada: int.parse(salvadaController.text),
-                            servida: int.parse(servidaController.text),
-                            teamplay: int.parse(teamplayController.text),
-                            saque: int.parse(saqueController.text),
+                              ataque: num.parse(ataqueController.text),
+                            defensa: num.parse(defensaController.text),
+                            salvada: num.parse(salvadaController.text),
+                            servida: num.parse(servidaController.text),
+                            teamplay: num.parse(teamplayController.text),
+                            saque: num.parse(saqueController.text),
                             )
                             )));
                     jugadoresBloc.add(LoadJugadoresEvent());
@@ -282,12 +282,12 @@ class EditarJugadorScreen extends StatelessWidget {
                             id: jugador.id,
                             nombre: nombreController.text,
                             habilidades: JugadorHabilidades(
-                              ataque: int.parse(ataqueController.text),
-                              defensa: int.parse(defensaController.text),
-                              salvada: int.parse(salvadaController.text),
-                              servida: int.parse(servidaController.text),
-                              teamplay: int.parse(teamplayController.text),
-                              saque: int.parse(saqueController.text),
+                              ataque: num.parse(ataqueController.text),
+                              defensa: num.parse(defensaController.text),
+                              salvada: num.parse(salvadaController.text),
+                              servida: num.parse(servidaController.text),
+                              teamplay: num.parse(teamplayController.text),
+                              saque: num.parse(saqueController.text),
                             ))));
                     context.read<JugadoresBloc>().add(LoadJugadoresEvent());
                     Navigator.pop(context);
